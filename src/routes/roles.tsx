@@ -69,25 +69,23 @@ function RolesPage() {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(GROUPS).map(([group, perms]) => (
-                  <>
-                    <tr key={group} className="bg-surface-2/30">
-                      <td colSpan={ROLES.length + 1} className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-secondary">{group}</td>
+                {Object.entries(GROUPS).flatMap(([group, perms]) => [
+                  <tr key={`group-${group}`} className="bg-surface-2/30">
+                    <td colSpan={ROLES.length + 1} className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-secondary">{group}</td>
+                  </tr>,
+                  ...perms.map(p => (
+                    <tr key={p} className="border-b border-border-subtle hover:bg-surface-2/30">
+                      <td className="sticky left-0 z-10 bg-surface px-4 py-2 capitalize text-text-primary">{PRETTY[p]}</td>
+                      {ROLES.map(r => (
+                        <td key={r} className="px-2 py-2 text-center">
+                          {ROLE_PERMISSIONS[r].includes(p)
+                            ? <Check className="mx-auto h-3.5 w-3.5 text-[var(--color-success)]" />
+                            : <span className="text-text-disabled">—</span>}
+                        </td>
+                      ))}
                     </tr>
-                    {perms.map(p => (
-                      <tr key={p} className="border-b border-border-subtle hover:bg-surface-2/30">
-                        <td className="sticky left-0 z-10 bg-surface px-4 py-2 capitalize text-text-primary">{PRETTY[p]}</td>
-                        {ROLES.map(r => (
-                          <td key={r} className="px-2 py-2 text-center">
-                            {ROLE_PERMISSIONS[r].includes(p)
-                              ? <Check className="mx-auto h-3.5 w-3.5 text-[var(--color-success)]" />
-                              : <span className="text-text-disabled">—</span>}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </>
-                ))}
+                  )),
+                ])}
               </tbody>
             </table>
           </div>
