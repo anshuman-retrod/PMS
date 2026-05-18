@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/rbac";
 import {
   Lock, User, Eye, EyeOff, ChevronDown, ChevronLeft, ChevronRight,
-  Sun, Plane, PlaneLanding, Gauge, TrendingUp, Sparkles, Zap, BarChart3, Heart, Quote,
+  Sun, Sparkles, Zap, BarChart3, Heart, Quote,
 } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
