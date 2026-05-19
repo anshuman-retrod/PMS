@@ -3,10 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/rbac";
 import {
-  Lock, Mail, Eye, EyeOff, ChevronDown, ChevronLeft, ChevronRight,
+  Lock, User as UserIcon, Eye, EyeOff, ChevronDown, ChevronLeft, ChevronRight,
   Sparkles, Quote, ShieldCheck, BedDouble, BarChart3, Building2,
   Brain, Users, Wallet, Sun, ArrowUpRight, ArrowRight, Globe,
-  TrendingUp, CalendarDays, CircleCheck,
+  TrendingUp, CalendarDays, CircleCheck, Smartphone, Loader2, AlertCircle,
+  LifeBuoy,
 } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
