@@ -326,3 +326,6 @@ export interface PortfolioProperty {
   alerts: number;
   stars: number;
 }
+
+export type Guest = GuestProfile;
+
