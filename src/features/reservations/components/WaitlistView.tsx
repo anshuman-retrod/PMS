@@ -24,7 +24,10 @@ export function WaitlistView({ entries }: { entries: WaitlistEntry[] }) {
           <thead>
             <tr className="border-b border-border bg-surface-2/40 text-left">
               {["ID", "Guest", "Dates", "Room type", "Priority", "Requested", ""].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                <th
+                  key={h}
+                  className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                >
                   {h}
                 </th>
               ))}
@@ -38,11 +41,16 @@ export function WaitlistView({ entries }: { entries: WaitlistEntry[] }) {
                 <td className="px-4 py-3 text-text-secondary">{e.dates}</td>
                 <td className="px-4 py-3 text-text-secondary">{e.roomType}</td>
                 <td className="px-4 py-3">
-                  <StatusBadge tone={e.priority === "High" ? "warning" : "neutral"}>{e.priority}</StatusBadge>
+                  <StatusBadge tone={e.priority === "High" ? "warning" : "neutral"}>
+                    {e.priority}
+                  </StatusBadge>
                 </td>
                 <td className="px-4 py-3 text-text-secondary">{e.requestedAt}</td>
                 <td className="px-4 py-3 text-right">
-                  <button type="button" className="text-[12px] font-medium text-primary hover:underline">
+                  <button
+                    type="button"
+                    className="text-[12px] font-medium text-primary hover:underline"
+                  >
                     Convert
                   </button>
                 </td>

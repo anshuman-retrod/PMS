@@ -1,4 +1,5 @@
 import { Role } from "./rbac";
+import type { FeatureFlags, PropertyEntitlements } from "./entitlements";
 
 export interface AppUser {
   id: string;
@@ -9,6 +10,13 @@ export interface AppUser {
   active: boolean;
   property: string;
   lastActive?: string;
+}
+
+export interface TenantEntitlements {
+  tenantId: string;
+  plan: "starter" | "growth" | "enterprise";
+  features: FeatureFlags;
+  propertyOverrides?: PropertyEntitlements[];
 }
 
 export interface AuthSession {

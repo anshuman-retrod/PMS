@@ -13,12 +13,13 @@ export function ConnectionsScreen() {
   const [syncing, setSyncing] = useState(false);
 
   const filtered = useMemo(
-    () => (channel === "All" ? data ?? [] : (data ?? []).filter((c) => c.channel === channel)),
+    () => (channel === "All" ? (data ?? []) : (data ?? []).filter((c) => c.channel === channel)),
     [data, channel],
   );
 
   const live = data?.filter((c) => c.status === "Connected").length ?? 0;
-  const errors = data?.filter((c) => c.status === "Error" || c.status === "Disconnected").length ?? 0;
+  const errors =
+    data?.filter((c) => c.status === "Error" || c.status === "Disconnected").length ?? 0;
 
   const handleSync = async () => {
     setSyncing(true);
@@ -49,15 +50,28 @@ export function ConnectionsScreen() {
 
       {data && (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <KpiCard label="Connected" value={String(live)} accent="success" />
             <KpiCard label="Disconnected / error" value={String(errors)} accent="error" />
-            <KpiCard label="Total bookings · MTD" value={String(data.reduce((a, c) => a + c.bookingsMtd, 0))} accent="info" />
-            <KpiCard label="Total revenue" value={fmtINR(data.reduce((a, c) => a + c.revenueMtd, 0))} accent="brand" />
+            <KpiCard
+              label="Total bookings · MTD"
+              value={String(data.reduce((a, c) => a + c.bookingsMtd, 0))}
+              accent="info"
+            />
+            <KpiCard
+              label="Total revenue"
+              value={fmtINR(data.reduce((a, c) => a + c.revenueMtd, 0))}
+              accent="brand"
+            />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <ChannelFilterToolbar channel={channel} onChannel={setChannel} onSync={handleSync} syncing={syncing} />
+            <ChannelFilterToolbar
+              channel={channel}
+              onChannel={setChannel}
+              onSync={handleSync}
+              syncing={syncing}
+            />
             <Button variant="outline" size="sm" onClick={reload}>
               <RefreshCcw className="h-3.5 w-3.5" />
               Refresh status
@@ -66,12 +80,24 @@ export function ConnectionsScreen() {
 
           <Card>
             <CardHeader title="Channel connections" hint="SU property ID · PROP-1001" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[900px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Channel", "Status", "Last sync", "Commission", "Bookings", "Revenue", "Parity", "Actions"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {[
+                      "Channel",
+                      "Status",
+                      "Last sync",
+                      "Commission",
+                      "Bookings",
+                      "Revenue",
+                      "Parity",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
                         {h}
                       </th>
                     ))}
@@ -79,7 +105,10 @@ export function ConnectionsScreen() {
                 </thead>
                 <tbody>
                   {filtered.map((c) => (
-                    <tr key={c.channel} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={c.channel}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3 font-medium">{c.channel}</td>
                       <td className="px-4 py-3">
                         <StatusBadge tone={mapTone(c.status)}>{c.status}</StatusBadge>
@@ -89,7 +118,10 @@ export function ConnectionsScreen() {
                       <td className="px-4 py-3 font-mono">{c.bookingsMtd}</td>
                       <td className="px-4 py-3 font-mono">{fmtINR(c.revenueMtd)}</td>
                       <td className="px-4 py-3">
-                        <StatusBadge tone={mapTone(c.parity)}>{c.parity}{c.parityDelta ? ` · ${c.parityDelta}` : ""}</StatusBadge>
+                        <StatusBadge tone={mapTone(c.parity)}>
+                          {c.parity}
+                          {c.parityDelta ? ` · ${c.parityDelta}` : ""}
+                        </StatusBadge>
                       </td>
                       <td className="px-4 py-3">
                         <Button variant="ghost" size="sm">

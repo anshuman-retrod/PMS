@@ -21,13 +21,18 @@ export function GuestDetailsCard({ guest }: GuestDetailsCardProps) {
             {avatarInitials}
           </div>
           <div>
-            <div className="font-display text-[18px] font-semibold text-text-primary">{guest.name}</div>
+            <div className="font-display text-[18px] font-semibold text-text-primary">
+              {guest.name}
+            </div>
             <div className="text-[12px] text-text-secondary">{guest.country} · Returning guest</div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 text-[12px]">
           <Stat label="Lifetime spend" value={`₹${guest.ltv.toLocaleString()}`} />
-          <Stat label="Avg ADR" value={`₹${Math.round(guest.ltv / guest.visits).toLocaleString()}`} />
+          <Stat
+            label="Avg ADR"
+            value={`₹${Math.round(guest.ltv / guest.visits).toLocaleString()}`}
+          />
           <Stat label="Avg stay" value="3.2 nights" />
           <Stat label="Last stay" value="Mar 2026" />
         </div>

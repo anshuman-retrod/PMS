@@ -1,9 +1,17 @@
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 import { Card, CardHeader } from "@/components/ui/Primitives";
 
 interface RevenueTrendChartProps {
   revenueTrend: { day: string; revenue: number }[];
-  tooltipStyle: Record<string, any>;
+  tooltipStyle: React.CSSProperties;
 }
 
 export function RevenueTrendChart({ revenueTrend, tooltipStyle }: RevenueTrendChartProps) {
@@ -19,8 +27,18 @@ export function RevenueTrendChart({ revenueTrend, tooltipStyle }: RevenueTrendCh
                 <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="day" stroke="var(--color-text-disabled)" fontSize={11} tickLine={false} axisLine={false} />
+            <CartesianGrid
+              stroke="var(--color-border-subtle)"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="day"
+              stroke="var(--color-text-disabled)"
+              fontSize={11}
+              tickLine={false}
+              axisLine={false}
+            />
             <YAxis
               stroke="var(--color-text-disabled)"
               fontSize={11}
@@ -29,7 +47,13 @@ export function RevenueTrendChart({ revenueTrend, tooltipStyle }: RevenueTrendCh
               tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip contentStyle={tooltipStyle} />
-            <Area type="monotone" dataKey="revenue" stroke="var(--color-primary)" strokeWidth={2} fill="url(#rev)" />
+            <Area
+              type="monotone"
+              dataKey="revenue"
+              stroke="var(--color-primary)"
+              strokeWidth={2}
+              fill="url(#rev)"
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>

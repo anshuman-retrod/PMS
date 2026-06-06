@@ -75,7 +75,11 @@ export function RestrictionsView({ restrictions }: RestrictionsViewProps) {
                   }`}
                 >
                   <div className="font-mono font-semibold text-text-primary">{day}</div>
-                  {r && <div className="mt-0.5 truncate font-medium text-[var(--color-warning)]">{r.kind}</div>}
+                  {r && (
+                    <div className="mt-0.5 truncate font-medium text-[var(--color-warning)]">
+                      {r.kind}
+                    </div>
+                  )}
                 </div>
               );
             })}

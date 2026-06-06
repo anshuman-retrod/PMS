@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { RefreshCcw } from "lucide-react";
-import { PageHeader, Card, CardHeader, KpiCard, StatusBadge, Button } from "@/components/ui/Primitives";
-import { otaBreakdown, otaMappings, otaSyncLogs } from "@/services/mock/db";
+import {
+  PageHeader,
+  Card,
+  CardHeader,
+  KpiCard,
+  StatusBadge,
+  Button,
+} from "@/components/ui/Primitives";
+import {
+  useOtaBreakdownQuery,
+  useOtaMappingsQuery,
+  useOtaSyncLogsQuery,
+} from "@/services/mock/queries";
 
 const channels = [
   { name: "Booking.com", live: true, parity: "Aligned", commission: "15%" },
@@ -17,6 +28,10 @@ const mapTone = (s: string) =>
   s === "Mapped" || s === "Reference" ? "success" : s === "Mismatch" ? "warning" : "error";
 
 export function OtaFeature() {
+  const { data: otaBreakdown = [] } = useOtaBreakdownQuery();
+  const { data: otaMappings = [] } = useOtaMappingsQuery();
+  const { data: otaSyncLogs = [] } = useOtaSyncLogsQuery();
+
   const [tab, setTab] = useState<Tab>("performance");
   const parityAlerts = channels.filter((c) => c.parity.includes("Drift")).length;
 
@@ -40,7 +55,12 @@ export function OtaFeature() {
           <KpiCard label="Channel revenue" value="₹46.8 L" accent="brand" />
           <KpiCard label="Avg commission" value="14.2%" accent="warning" />
           <KpiCard label="Sync health" value="100%" delta="All channels live" accent="success" />
-          <KpiCard label="Parity alerts" value={String(parityAlerts)} deltaTone="error" accent="error" />
+          <KpiCard
+            label="Parity alerts"
+            value={String(parityAlerts)}
+            deltaTone="error"
+            accent="error"
+          />
         </div>
 
         <div className="flex rounded-md border border-border bg-surface p-0.5 text-[12px] w-fit">
@@ -56,7 +76,9 @@ export function OtaFeature() {
               type="button"
               onClick={() => setTab(t.id)}
               className={`rounded px-3 py-1 transition ${
-                tab === t.id ? "bg-foreground text-background" : "text-text-secondary hover:text-text-primary"
+                tab === t.id
+                  ? "bg-foreground text-background"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               {t.label}
@@ -70,8 +92,19 @@ export function OtaFeature() {
             <table className="w-full text-[13px]">
               <thead>
                 <tr className="border-b border-border bg-surface-2/40 text-left">
-                  {["Channel", "Status", "Bookings", "Revenue", "Avg ADR", "Parity", "Commission"].map((h) => (
-                    <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  {[
+                    "Channel",
+                    "Status",
+                    "Bookings",
+                    "Revenue",
+                    "Avg ADR",
+                    "Parity",
+                    "Commission",
+                  ].map((h) => (
+                    <th
+                      key={h}
+                      className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                    >
                       {h}
                     </th>
                   ))}
@@ -81,12 +114,19 @@ export function OtaFeature() {
                 {channels.map((c) => {
                   const ota = otaBreakdown.find((o) => o.source === c.name);
                   return (
-                    <tr key={c.name} className="border-b border-border-subtle hover:bg-surface-2/50">
+                    <tr
+                      key={c.name}
+                      className="border-b border-border-subtle hover:bg-surface-2/50"
+                    >
                       <td className="px-4 py-3 font-medium text-text-primary">{c.name}</td>
                       <td className="px-4 py-3">
-                        <StatusBadge tone={c.live ? "success" : "neutral"}>{c.live ? "Live" : "Paused"}</StatusBadge>
+                        <StatusBadge tone={c.live ? "success" : "neutral"}>
+                          {c.live ? "Live" : "Paused"}
+                        </StatusBadge>
                       </td>
-                      <td className="px-4 py-3 font-mono text-text-primary">{ota?.bookings ?? "—"}</td>
+                      <td className="px-4 py-3 font-mono text-text-primary">
+                        {ota?.bookings ?? "—"}
+                      </td>
                       <td className="px-4 py-3 font-mono text-text-primary">
                         {ota ? `₹${(ota.revenue / 100000).toFixed(1)}L` : "—"}
                       </td>
@@ -95,7 +135,13 @@ export function OtaFeature() {
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge
-                          tone={c.parity.includes("Drift") ? "warning" : c.parity === "Reference" ? "brand" : "success"}
+                          tone={
+                            c.parity.includes("Drift")
+                              ? "warning"
+                              : c.parity === "Reference"
+                                ? "brand"
+                                : "success"
+                          }
                         >
                           {c.parity}
                         </StatusBadge>
@@ -117,7 +163,10 @@ export function OtaFeature() {
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
                     {["Room type", "Booking.com", "Expedia", "Agoda", "Direct"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
                         {h}
                       </th>
                     ))}
@@ -125,7 +174,10 @@ export function OtaFeature() {
                 </thead>
                 <tbody>
                   {otaMappings.map((m) => (
-                    <tr key={m.roomType} className="border-b border-border-subtle hover:bg-surface-2/50">
+                    <tr
+                      key={m.roomType}
+                      className="border-b border-border-subtle hover:bg-surface-2/50"
+                    >
                       <td className="px-4 py-3 font-medium text-text-primary">{m.roomType}</td>
                       <td className="px-4 py-3">
                         <StatusBadge tone={mapTone(m.bookingCom)}>{m.bookingCom}</StatusBadge>
@@ -154,7 +206,10 @@ export function OtaFeature() {
               <thead>
                 <tr className="border-b border-border bg-surface-2/40 text-left">
                   {["ID", "Channel", "Action", "Status", "Time"].map((h) => (
-                    <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    <th
+                      key={h}
+                      className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                    >
                       {h}
                     </th>
                   ))}
@@ -167,7 +222,15 @@ export function OtaFeature() {
                     <td className="px-4 py-3 font-medium">{log.channel}</td>
                     <td className="px-4 py-3 text-text-secondary">{log.action}</td>
                     <td className="px-4 py-3">
-                      <StatusBadge tone={log.status === "Success" ? "success" : log.status === "Warning" ? "warning" : "error"}>
+                      <StatusBadge
+                        tone={
+                          log.status === "Success"
+                            ? "success"
+                            : log.status === "Warning"
+                              ? "warning"
+                              : "error"
+                        }
+                      >
                         {log.status}
                       </StatusBadge>
                     </td>

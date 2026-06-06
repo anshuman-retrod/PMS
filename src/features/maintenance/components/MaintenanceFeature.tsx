@@ -1,25 +1,32 @@
 import { useMemo, useState } from "react";
 import { Filter, Plus, Wrench } from "lucide-react";
 import { PageHeader, KpiCard, Button, Card, StatusBadge } from "@/components/ui/Primitives";
-import { workOrders } from "@/services/mock/db";
+import { useWorkOrdersQuery } from "@/services/mock/queries";
 import { type WorkOrder, type WorkOrderStatus } from "@/types/pms";
 import { cn } from "@/lib/utils";
 
 const columns: WorkOrderStatus[] = ["Reported", "In Progress", "Waiting Parts", "Resolved"];
 
 const priorityTone = (p: WorkOrder["priority"]) =>
-  (({ Critical: "error", High: "warning", Normal: "neutral" } as const)[p]);
+  (({ Critical: "error", High: "warning", Normal: "neutral" }) as const)[p];
 
 export function MaintenanceFeature() {
+  const { data: workOrders = [] } = useWorkOrdersQuery();
+
   const [priorityFilter, setPriorityFilter] = useState<string>("All");
 
   const filtered = useMemo(
-    () => (priorityFilter === "All" ? workOrders : workOrders.filter((w) => w.priority === priorityFilter)),
+    () =>
+      priorityFilter === "All"
+        ? workOrders
+        : workOrders.filter((w) => w.priority === priorityFilter),
     [priorityFilter],
   );
 
   const open = workOrders.filter((w) => w.status !== "Resolved").length;
-  const critical = workOrders.filter((w) => w.priority === "Critical" && w.status !== "Resolved").length;
+  const critical = workOrders.filter(
+    (w) => w.priority === "Critical" && w.status !== "Resolved",
+  ).length;
   const ooo = 6;
 
   return (
@@ -42,9 +49,15 @@ export function MaintenanceFeature() {
         }
       />
 
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-          <KpiCard label="Open work orders" value={String(open)} delta={critical ? `${critical} critical` : undefined} deltaTone="error" accent="warning" />
+      <div className="responsive-page-x space-y-5 py-4 sm:space-y-6 sm:py-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <KpiCard
+            label="Open work orders"
+            value={String(open)}
+            delta={critical ? `${critical} critical` : undefined}
+            deltaTone="error"
+            accent="warning"
+          />
           <KpiCard label="Critical" value={String(critical)} accent="error" />
           <KpiCard label="Rooms OOO" value={String(ooo)} accent="warning" />
           <KpiCard label="Avg resolution" value="4.2h" accent="info" />
@@ -63,18 +76,22 @@ export function MaintenanceFeature() {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 overflow-x-auto lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {columns.map((col) => {
             const items = filtered.filter((w) => w.status === col);
             return (
-              <div key={col} className="min-w-[240px]">
+              <div key={col}>
                 <div className="mb-2 flex items-center justify-between px-1">
                   <span className="text-[12px] font-semibold text-text-primary">{col}</span>
-                  <span className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[10px] text-text-secondary">{items.length}</span>
+                  <span className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[10px] text-text-secondary">
+                    {items.length}
+                  </span>
                 </div>
                 <div className="space-y-2">
                   {items.length === 0 ? (
-                    <Card className="border-dashed p-4 text-center text-[12px] text-text-secondary">No items</Card>
+                    <Card className="border-dashed p-4 text-center text-[12px] text-text-secondary">
+                      No items
+                    </Card>
                   ) : (
                     items.map((wo) => <WorkOrderCard key={wo.id} wo={wo} />)
                   )}
@@ -100,8 +117,15 @@ function WorkOrderCard({ wo }: { wo: WorkOrder }) {
         Room {wo.room}
       </div>
       <p className="mt-1 text-[12px] text-text-primary">{wo.title}</p>
-      <p className="mt-1 text-[11px] text-text-secondary">{wo.category} · {wo.createdAt}</p>
-      <div className={cn("mt-2 border-t border-border-subtle pt-2 text-[11px]", wo.assignee === "—" ? "text-[var(--color-warning)]" : "text-text-secondary")}>
+      <p className="mt-1 text-[11px] text-text-secondary">
+        {wo.category} · {wo.createdAt}
+      </p>
+      <div
+        className={cn(
+          "mt-2 border-t border-border-subtle pt-2 text-[11px]",
+          wo.assignee === "—" ? "text-[var(--color-warning)]" : "text-text-secondary",
+        )}
+      >
         {wo.assignee === "—" ? "Unassigned" : `Assigned: ${wo.assignee}`}
       </div>
     </Card>

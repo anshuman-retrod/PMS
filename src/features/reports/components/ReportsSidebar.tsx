@@ -6,7 +6,11 @@ interface ReportsSidebarProps {
   onSelectCategory: (c: string) => void;
 }
 
-export function ReportsSidebar({ categories, selectedCategory, onSelectCategory }: ReportsSidebarProps) {
+export function ReportsSidebar({
+  categories,
+  selectedCategory,
+  onSelectCategory,
+}: ReportsSidebarProps) {
   return (
     <Card>
       <CardHeader title="Categories" />

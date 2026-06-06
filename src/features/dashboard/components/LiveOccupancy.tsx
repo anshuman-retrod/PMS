@@ -1,6 +1,6 @@
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { occupancyByType } from "@/services/mock/db";
+import { useOccupancyByTypeQuery } from "@/services/mock/queries";
 
 interface LiveOccupancyProps {
   occPct: number;
@@ -9,6 +9,8 @@ interface LiveOccupancyProps {
 }
 
 export function LiveOccupancy({ occPct, occupied, totalRooms }: LiveOccupancyProps) {
+  const { data: occupancyByType = [] } = useOccupancyByTypeQuery();
+
   return (
     <Card>
       <CardHeader

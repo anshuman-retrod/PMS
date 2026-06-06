@@ -18,7 +18,10 @@ interface TransferViewProps {
 export function TransferView({ folio }: TransferViewProps) {
   return (
     <Card>
-      <CardHeader title="Transfer charges" hint="Move charges between folios or to a master account" />
+      <CardHeader
+        title="Transfer charges"
+        hint="Move charges between folios or to a master account"
+      />
       <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-[1fr_60px_1fr]">
         <div>
           <div className="label-uppercase mb-2">From folio</div>

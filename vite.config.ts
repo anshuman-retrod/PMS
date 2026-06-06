@@ -14,8 +14,8 @@ export default defineConfig(async ({ command }) => {
         behavior: "error",
         client: {
           files: ["**/server/**"],
-          specifiers: ["server-only"]
-        }
+          specifiers: ["server-only"],
+        },
       },
       server: { entry: "server" },
     }),
@@ -25,9 +25,11 @@ export default defineConfig(async ({ command }) => {
   if (command === "build") {
     try {
       const { cloudflare } = await import("@cloudflare/vite-plugin");
-      plugins.push(cloudflare({
-        viteEnvironment: { name: "ssr" }
-      }));
+      plugins.push(
+        cloudflare({
+          viteEnvironment: { name: "ssr" },
+        }),
+      );
     } catch (e) {
       // ignore
     }
@@ -44,8 +46,8 @@ export default defineConfig(async ({ command }) => {
         "react/jsx-runtime",
         "react/jsx-dev-runtime",
         "@tanstack/react-query",
-        "@tanstack/query-core"
-      ]
+        "@tanstack/query-core",
+      ],
     },
     plugins,
   };

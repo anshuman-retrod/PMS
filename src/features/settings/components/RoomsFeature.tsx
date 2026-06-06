@@ -1,5 +1,12 @@
 import { Plus } from "lucide-react";
-import { PageHeader, Card, CardHeader, KpiCard, StatusBadge, Button } from "@/components/ui/Primitives";
+import {
+  PageHeader,
+  Card,
+  CardHeader,
+  KpiCard,
+  StatusBadge,
+  Button,
+} from "@/components/ui/Primitives";
 
 const types = [
   { name: "Heritage Suite", count: 6, base: 35000, occ: 92 },
@@ -37,7 +44,10 @@ export function RoomsFeature() {
             <thead>
               <tr className="border-b border-border bg-surface-2/40 text-left">
                 {["Type", "Inventory", "Base rate", "Occupancy · MTD", "Status", ""].map((h) => (
-                  <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  <th
+                    key={h}
+                    className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                  >
                     {h}
                   </th>
                 ))}
@@ -48,11 +58,16 @@ export function RoomsFeature() {
                 <tr key={t.name} className="border-b border-border-subtle hover:bg-surface-2/50">
                   <td className="px-4 py-3 font-medium text-text-primary">{t.name}</td>
                   <td className="px-4 py-3 font-mono text-text-primary">{t.count} rooms</td>
-                  <td className="px-4 py-3 font-mono text-text-primary">₹{t.base.toLocaleString()}</td>
+                  <td className="px-4 py-3 font-mono text-text-primary">
+                    ₹{t.base.toLocaleString()}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-32 overflow-hidden rounded-full bg-surface-2">
-                        <div className="h-full rounded-full bg-primary" style={{ width: `${t.occ}%` }} />
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${t.occ}%` }}
+                        />
                       </div>
                       <span className="font-mono text-[12px] text-text-secondary">{t.occ}%</span>
                     </div>
@@ -61,7 +76,9 @@ export function RoomsFeature() {
                     <StatusBadge tone="success">Selling</StatusBadge>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <a className="text-[12px] font-medium text-primary hover:underline cursor-pointer">Configure</a>
+                    <a className="text-[12px] font-medium text-primary hover:underline cursor-pointer">
+                      Configure
+                    </a>
                   </td>
                 </tr>
               ))}

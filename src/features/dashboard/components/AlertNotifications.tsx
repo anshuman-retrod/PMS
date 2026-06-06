@@ -1,8 +1,10 @@
 import { Crown, Clock, Wrench, Bell, ArrowRight, AlertTriangle } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { dashboardAlerts } from "@/services/mock/db";
+import { useDashboardAlertsQuery } from "@/services/mock/queries";
 
 export function AlertNotifications() {
+  const { data: dashboardAlerts = [] } = useDashboardAlertsQuery();
+
   return (
     <Card className="lg:col-span-2">
       <CardHeader

@@ -3,16 +3,20 @@ import { Link } from "@tanstack/react-router";
 import { Filter, Plus, Search } from "lucide-react";
 import { PageHeader, Button } from "@/components/ui/Primitives";
 import {
-  reservations,
-  availabilityMatrix,
-  rateCalendar,
-  restrictions,
-  waitlist,
-  groupBlocks,
-  arrivalsToday,
-  departuresToday,
-  occupancyByType,
-} from "@/services/mock/db";
+  useReservationsQuery,
+  useAvailabilityMatrixQuery,
+  useRateCalendarQuery,
+  useRestrictionsQuery,
+  useWaitlistQuery,
+  useGroupBlocksQuery,
+  useArrivalsTodayQuery,
+  useDeparturesTodayQuery,
+  useOccupancyByTypeQuery,
+  useMealPlansQuery,
+  useRatePlansQuery,
+  useHotelPackagesQuery,
+  useAddOnProductsQuery,
+} from "@/services/mock/queries";
 import { KpiCard } from "@/components/ui/Primitives";
 import { WaitlistView } from "./WaitlistView";
 import { BlocksView } from "./BlocksView";
@@ -51,16 +55,40 @@ const sourceColor: Record<string, string> = {
   Airbnb: "var(--color-error)",
 };
 
+type BadgeTone = "success" | "warning" | "error" | "info" | "neutral" | "brand" | "dark";
+
 const statusTone = (s: string) =>
-  (({ Confirmed: "success", "Checked-In": "info", "Checked-Out": "neutral", Pending: "warning", Cancelled: "error", "No-Show": "dark" }[s] as any) || "neutral");
+  (({
+    Confirmed: "success",
+    "Checked-In": "info",
+    "Checked-Out": "neutral",
+    Pending: "warning",
+    Cancelled: "error",
+    "No-Show": "dark",
+  })[s] as BadgeTone) || "neutral";
 
 type View = "timeline" | "table" | "availability" | "rate" | "restrictions" | "waitlist" | "blocks";
 
 export function ReservationsFeature() {
+  const { data: reservations = [] } = useReservationsQuery();
+  const { data: availabilityMatrix = [] } = useAvailabilityMatrixQuery();
+  const { data: rateCalendar = [] } = useRateCalendarQuery();
+  const { data: restrictions = [] } = useRestrictionsQuery();
+  const { data: waitlist = [] } = useWaitlistQuery();
+  const { data: groupBlocks = [] } = useGroupBlocksQuery();
+  const { data: arrivalsToday = [] } = useArrivalsTodayQuery();
+  const { data: departuresToday = [] } = useDeparturesTodayQuery();
+  const { data: occupancyByType = [] } = useOccupancyByTypeQuery();
+  const { data: mealPlans = [] } = useMealPlansQuery();
+  const { data: ratePlans = [] } = useRatePlansQuery();
+  const { data: hotelPackages = [] } = useHotelPackagesQuery();
+  const { data: addOnProducts = [] } = useAddOnProductsQuery();
+
   const [view, setView] = useState<View>("timeline");
   const [statusFilter, setStatusFilter] = useState<string>("All");
 
-  const filtered = statusFilter === "All" ? reservations : reservations.filter((r) => r.status === statusFilter);
+  const filtered =
+    statusFilter === "All" ? reservations : reservations.filter((r) => r.status === statusFilter);
   const totalRooms = occupancyByType.reduce((a, b) => a + b.total, 0);
   const occupied = occupancyByType.reduce((a, b) => a + b.occupied, 0);
   const occPct = Math.round((occupied / totalRooms) * 1000) / 10;
@@ -88,26 +116,69 @@ export function ReservationsFeature() {
         }
       />
 
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+      <div className="responsive-page-x space-y-5 py-4 sm:space-y-6 sm:py-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <KpiCard label="Total reservations" value={String(reservations.length)} accent="brand" />
           <KpiCard label="Check-ins today" value={String(arrivalsToday.length)} accent="success" />
-          <KpiCard label="Check-outs today" value={String(departuresToday.length)} accent="warning" />
+          <KpiCard
+            label="Check-outs today"
+            value={String(departuresToday.length)}
+            accent="warning"
+          />
           <KpiCard label="Occupancy" value={`${occPct}%`} accent="info" />
-          <KpiCard label="Cancellations" value={String(cancellationsToday)} deltaTone="error" accent="error" />
+          <KpiCard
+            label="Cancellations"
+            value={String(cancellationsToday)}
+            deltaTone="error"
+            accent="error"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiCard
+            label="Meal plans active"
+            value={String(mealPlans.filter((m) => m.status === "Active").length)}
+            accent="info"
+          />
+          <KpiCard
+            label="Rate plans active"
+            value={String(ratePlans.filter((r) => r.status === "Active").length)}
+            accent="success"
+          />
+          <KpiCard
+            label="Packages active"
+            value={String(hotelPackages.filter((p) => p.status === "Active").length)}
+            accent="warning"
+          />
+          <KpiCard
+            label="Add-on services"
+            value={String(addOnProducts.length)}
+            accent="brand"
+          />
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-72">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-disabled" />
             <input
               className="h-9 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               placeholder="Search guest, ID, room, phone, email…"
             />
           </div>
-          <div className="flex rounded-md border border-border bg-surface p-0.5 text-[12px]">
-            {(["timeline", "table", "availability", "rate", "restrictions", "waitlist", "blocks"] as View[]).map((v) => (
+          <div className="w-full overflow-x-auto sm:w-auto">
+            <div className="flex min-w-max rounded-md border border-border bg-surface p-0.5 text-[12px]">
+            {(
+              [
+                "timeline",
+                "table",
+                "availability",
+                "rate",
+                "restrictions",
+                "waitlist",
+                "blocks",
+              ] as View[]
+            ).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
@@ -130,6 +201,7 @@ export function ReservationsFeature() {
                           : v}
               </button>
             ))}
+            </div>
           </div>
           {view === "table" && (
             <select
@@ -137,12 +209,20 @@ export function ReservationsFeature() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="h-8 rounded-md border border-border bg-surface px-2 text-[12px]"
             >
-              {["All", "Confirmed", "Checked-In", "Pending", "Cancelled", "No-Show", "Checked-Out"].map((s) => (
+              {[
+                "All",
+                "Confirmed",
+                "Checked-In",
+                "Pending",
+                "Cancelled",
+                "No-Show",
+                "Checked-Out",
+              ].map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
           )}
-          <div className="ml-auto flex items-center gap-2 text-[11px] text-text-secondary">
+          <div className="flex w-full flex-wrap items-center gap-2 text-[11px] text-text-secondary sm:ml-auto sm:w-auto">
             {Object.entries(sourceColor).map(([k, v]) => (
               <span key={k} className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-sm" style={{ background: v }} />

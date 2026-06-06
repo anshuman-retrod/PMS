@@ -9,11 +9,16 @@ export function BlocksView({ blocks }: { blocks: GroupBlock[] }) {
         <table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-border bg-surface-2/40 text-left">
-              {["Block", "Group", "Dates", "Blocked", "Pickup", "Cut-off", "Status", ""].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                  {h}
-                </th>
-              ))}
+              {["Block", "Group", "Dates", "Blocked", "Pickup", "Cut-off", "Status", ""].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
@@ -32,13 +37,18 @@ export function BlocksView({ blocks }: { blocks: GroupBlock[] }) {
                   <td className="px-4 py-3 text-text-secondary">{b.cutOff}</td>
                   <td className="px-4 py-3">
                     <StatusBadge
-                      tone={b.status === "Open" ? "info" : b.status === "Closed" ? "success" : "neutral"}
+                      tone={
+                        b.status === "Open" ? "info" : b.status === "Closed" ? "success" : "neutral"
+                      }
                     >
                       {b.status}
                     </StatusBadge>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <button type="button" className="text-[12px] font-medium text-primary hover:underline">
+                    <button
+                      type="button"
+                      className="text-[12px] font-medium text-primary hover:underline"
+                    >
                       Manage
                     </button>
                   </td>

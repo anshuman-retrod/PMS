@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { PageHeader, KpiCard, Button, StatusBadge } from "@/components/ui/Primitives";
-import { housekeepingRooms } from "@/services/mock/db";
+import { useHousekeepingRoomsQuery } from "@/services/mock/queries";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const cardBg = (s: string) =>
   ({
@@ -10,11 +12,29 @@ const cardBg = (s: string) =>
     Dirty: "border-l-[var(--color-error)] bg-[oklch(0.985_0.03_27)]",
     OOO: "border-l-text-disabled bg-surface-2",
     Inspected: "border-l-[var(--color-info)] bg-[oklch(0.985_0.025_263)]",
-  }[s] ?? "border-l-border bg-surface");
+  })[s] ?? "border-l-border bg-surface";
 
 export function HousekeepingMobileFeature() {
+  const { data: housekeepingRooms = [] } = useHousekeepingRoomsQuery();
+  const [activeRoom, setActiveRoom] = useState<string>("");
+
   const assigned = housekeepingRooms.filter((r) => r.staff === "Priya" || r.staff === "Lakshmi");
   const myRooms = assigned.length ? assigned.slice(0, 8) : housekeepingRooms.slice(0, 8);
+  const nextRoom = useMemo(() => myRooms.find((r) => r.status === "Dirty" || r.status === "Cleaning"), [myRooms]);
+
+  const handleStartNextRoom = () => {
+    if (!nextRoom) {
+      toast.info("No pending rooms in your queue.");
+      return;
+    }
+    setActiveRoom(nextRoom.num);
+    toast.success(`Started room ${nextRoom.num} (${nextRoom.status}).`);
+  };
+
+  const handleRoomTap = (roomNum: string) => {
+    setActiveRoom(roomNum);
+    toast.message(`Opened room ${roomNum} task sheet.`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -39,18 +59,30 @@ export function HousekeepingMobileFeature() {
             <button
               key={r.num}
               type="button"
+              onClick={() => handleRoomTap(r.num)}
               className={`flex w-full items-center justify-between rounded-lg border border-l-[4px] border-border p-4 text-left shadow-e1 ${cardBg(r.status)}`}
             >
               <div>
                 <div className="font-mono text-[20px] font-semibold">{r.num}</div>
                 <div className="text-[12px] text-text-secondary">{r.type}</div>
               </div>
-              <StatusBadge tone={r.status === "Dirty" ? "error" : r.status === "Cleaning" ? "warning" : "success"}>{r.status}</StatusBadge>
+              <StatusBadge
+                tone={
+                  r.status === "Dirty" ? "error" : r.status === "Cleaning" ? "warning" : "success"
+                }
+              >
+                {activeRoom === r.num ? "In progress" : r.status}
+              </StatusBadge>
             </button>
           ))}
         </div>
 
-        <Button className="fixed bottom-6 left-4 right-4 h-12 justify-center shadow-e2">Start next room</Button>
+        <Button
+          className="fixed bottom-6 left-4 right-4 h-12 justify-center shadow-e2"
+          onClick={handleStartNextRoom}
+        >
+          Start next room
+        </Button>
       </div>
     </div>
   );

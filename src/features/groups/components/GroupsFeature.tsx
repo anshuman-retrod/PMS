@@ -1,16 +1,27 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Plus, Filter } from "lucide-react";
-import { PageHeader, KpiCard, Button, Card, CardHeader, StatusBadge } from "@/components/ui/Primitives";
-import { groupBlocks } from "@/services/mock/db";
+import {
+  PageHeader,
+  KpiCard,
+  Button,
+  Card,
+  CardHeader,
+  StatusBadge,
+} from "@/components/ui/Primitives";
+import { useGroupBlocksQuery } from "@/services/mock/queries";
 import { type GroupBlock } from "@/types/pms";
 
 export function GroupsFeature() {
-  const [selected, setSelected] = useState<GroupBlock>(groupBlocks[0]);
+  const { data: groupBlocks = [] } = useGroupBlocksQuery();
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected: GroupBlock | null =
+    groupBlocks.find((block) => block.id === selectedId) ?? groupBlocks[0] ?? null;
   const active = groupBlocks.filter((b) => b.status === "Open").length;
   const totalBlocked = groupBlocks.reduce((a, b) => a + b.blocked, 0);
   const totalPicked = groupBlocks.reduce((a, b) => a + b.pickedUp, 0);
-  const pickupPct = Math.round((totalPicked / totalBlocked) * 100);
+  const pickupPct = totalBlocked > 0 ? Math.round((totalPicked / totalBlocked) * 100) : 0;
 
   return (
     <div>
@@ -49,7 +60,10 @@ export function GroupsFeature() {
               <thead>
                 <tr className="border-b border-border bg-surface-2/40 text-left">
                   {["Block", "Group", "Dates", "Pickup", "Cut-off", "Status"].map((h) => (
-                    <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    <th
+                      key={h}
+                      className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                    >
                       {h}
                     </th>
                   ))}
@@ -59,9 +73,9 @@ export function GroupsFeature() {
                 {groupBlocks.map((b) => (
                   <tr
                     key={b.id}
-                    onClick={() => setSelected(b)}
+                    onClick={() => setSelectedId(b.id)}
                     className={`cursor-pointer border-b border-border-subtle hover:bg-surface-2/50 ${
-                      selected.id === b.id ? "bg-primary-tint/30" : ""
+                      selected?.id === b.id ? "bg-primary-tint/30" : ""
                     }`}
                   >
                     <td className="px-4 py-3 font-mono text-[12px]">{b.id}</td>
@@ -72,7 +86,9 @@ export function GroupsFeature() {
                     </td>
                     <td className="px-4 py-3 text-text-secondary">{b.cutOff}</td>
                     <td className="px-4 py-3">
-                      <StatusBadge tone={b.status === "Open" ? "info" : "success"}>{b.status}</StatusBadge>
+                      <StatusBadge tone={b.status === "Open" ? "info" : "success"}>
+                        {b.status}
+                      </StatusBadge>
                     </td>
                   </tr>
                 ))}
@@ -81,17 +97,24 @@ export function GroupsFeature() {
           </Card>
 
           <Card>
-            <CardHeader title={selected.name} hint={selected.id} />
+            <CardHeader
+              title={selected?.name ?? "Select a group block"}
+              hint={selected?.id ?? "—"}
+            />
             <div className="space-y-4 p-5 text-[13px]">
               <div className="grid grid-cols-2 gap-3">
-                <Stat label="Blocked" value={String(selected.blocked)} />
-                <Stat label="Picked up" value={String(selected.pickedUp)} />
-                <Stat label="Cut-off" value={selected.cutOff} />
-                <Stat label="Status" value={selected.status} />
+                <Stat label="Blocked" value={String(selected?.blocked ?? 0)} />
+                <Stat label="Picked up" value={String(selected?.pickedUp ?? 0)} />
+                <Stat label="Cut-off" value={selected?.cutOff ?? "—"} />
+                <Stat label="Status" value={selected?.status ?? "—"} />
               </div>
               <div>
                 <div className="label-uppercase mb-2">Rooming list</div>
-                <p className="text-[12px] text-text-secondary">18 of {selected.blocked} rooms assigned · 4 pending names</p>
+                <p className="text-[12px] text-text-secondary">
+                  {selected
+                    ? `18 of ${selected.blocked} rooms assigned · 4 pending names`
+                    : "No group blocks available."}
+                </p>
                 <Button variant="outline" size="sm" className="mt-2 w-full justify-center">
                   Import CSV
                 </Button>

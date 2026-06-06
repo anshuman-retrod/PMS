@@ -2,9 +2,17 @@ import { Card, StatusBadge } from "@/components/ui/Primitives";
 import { type HousekeepingRoom } from "@/types/pms";
 
 const columns = [
-  { id: "assigned", label: "Assigned", match: (r: HousekeepingRoom) => r.staff !== "—" && r.status === "Dirty" },
+  {
+    id: "assigned",
+    label: "Assigned",
+    match: (r: HousekeepingRoom) => r.staff !== "—" && r.status === "Dirty",
+  },
   { id: "progress", label: "In progress", match: (r: HousekeepingRoom) => r.status === "Cleaning" },
-  { id: "inspect", label: "Inspection", match: (r: HousekeepingRoom) => r.status === "Inspected" || r.status === "Ready" },
+  {
+    id: "inspect",
+    label: "Inspection",
+    match: (r: HousekeepingRoom) => r.status === "Inspected" || r.status === "Ready",
+  },
 ];
 
 export function HousekeepingKanban({
@@ -22,7 +30,9 @@ export function HousekeepingKanban({
           <div key={col.id}>
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="text-[12px] font-semibold text-text-primary">{col.label}</span>
-              <span className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[10px] text-text-secondary">{items.length}</span>
+              <span className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[10px] text-text-secondary">
+                {items.length}
+              </span>
             </div>
             <div className="space-y-2">
               {items.map((r) => (

@@ -11,7 +11,9 @@ export function RoomMove() {
           <div className="rounded-md border border-border bg-surface p-4">
             <div className="font-mono text-[20px] font-semibold text-text-primary">204</div>
             <div className="text-[12px] text-text-secondary">Deluxe King · John Mathews</div>
-            <div className="mt-3 text-[11px] text-text-secondary">Folio balance · ₹26,800 · 3 charges</div>
+            <div className="mt-3 text-[11px] text-text-secondary">
+              Folio balance · ₹26,800 · 3 charges
+            </div>
           </div>
         </div>
         <div className="flex items-center justify-center">

@@ -1,15 +1,27 @@
 import { Plus } from "lucide-react";
 import { PageHeader, KpiCard, Button, Card, StatusBadge } from "@/components/ui/Primitives";
-import { guestServiceRequests } from "@/services/mock/db";
+import { useGuestServiceRequestsQuery } from "@/services/mock/queries";
 
 const columns = ["New", "Assigned", "In Progress", "Done"] as const;
 
 export function GuestRequestsFeature() {
+  const { data: guestServiceRequests = [] } = useGuestServiceRequestsQuery();
+
   const open = guestServiceRequests.filter((r) => r.status !== "Done");
 
   return (
     <div>
-      <PageHeader eyebrow="Guests" title="Guest Mobile Requests" description="In-stay requests from the mobile app." actions={<Button size="sm"><Plus className="h-3.5 w-3.5" />Assign</Button>} />
+      <PageHeader
+        eyebrow="Guests"
+        title="Guest Mobile Requests"
+        description="In-stay requests from the mobile app."
+        actions={
+          <Button size="sm">
+            <Plus className="h-3.5 w-3.5" />
+            Assign
+          </Button>
+        }
+      />
       <div className="space-y-6 p-6">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <KpiCard label="Open requests" value={String(open.length)} accent="brand" />
@@ -22,7 +34,10 @@ export function GuestRequestsFeature() {
             const items = guestServiceRequests.filter((r) => r.status === col);
             return (
               <div key={col}>
-                <div className="mb-2 flex justify-between px-1 text-[12px] font-semibold"><span>{col}</span><span className="text-text-secondary">{items.length}</span></div>
+                <div className="mb-2 flex justify-between px-1 text-[12px] font-semibold">
+                  <span>{col}</span>
+                  <span className="text-text-secondary">{items.length}</span>
+                </div>
                 <div className="space-y-2">
                   {items.map((r) => (
                     <Card key={r.id} className="p-3">

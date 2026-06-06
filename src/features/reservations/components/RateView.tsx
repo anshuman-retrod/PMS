@@ -19,12 +19,18 @@ export function RateView({ rateCalendar }: RateViewProps) {
       />
       <div className="overflow-x-auto">
         <div className="min-w-[900px] p-4">
-          <div className="grid gap-px bg-border-subtle" style={{ gridTemplateColumns: `160px repeat(14, 1fr)` }}>
+          <div
+            className="grid gap-px bg-border-subtle"
+            style={{ gridTemplateColumns: `160px repeat(14, 1fr)` }}
+          >
             <div className="bg-surface px-3 py-2 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
               Room type
             </div>
             {Array.from({ length: 14 }, (_, i) => (
-              <div key={i} className="bg-surface px-1 py-2 text-center text-[10px] font-medium text-text-secondary">
+              <div
+                key={i}
+                className="bg-surface px-1 py-2 text-center text-[10px] font-medium text-text-secondary"
+              >
                 {15 + i}
               </div>
             ))}

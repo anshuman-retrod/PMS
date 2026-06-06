@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ArrowRight, KeyRound, MoveRight, Wrench, ArrowUpCircle, Headset } from "lucide-react";
 import {
-  ArrowRight, KeyRound, MoveRight, Wrench, ArrowUpCircle, Headset,
-} from "lucide-react";
-import { PageHeader, Card, CardHeader, StatusBadge, Button, KpiCard } from "@/components/ui/Primitives";
-import { arrivalsToday, departuresToday } from "@/services/mock/db";
+  PageHeader,
+  Card,
+  CardHeader,
+  StatusBadge,
+  Button,
+  KpiCard,
+} from "@/components/ui/Primitives";
+import { useArrivalsTodayQuery, useDeparturesTodayQuery } from "@/services/mock/queries";
+import type { ComponentProps } from "react";
 import { RoomGrid } from "./RoomGrid";
 import { RoomMove } from "./RoomMove";
 import { OOOManagement } from "./OOOManagement";
@@ -25,11 +31,16 @@ const colorFor = (s: string) =>
     Occupied: "border-[var(--color-info)] bg-[oklch(0.95_0.04_263)] text-[var(--color-info)]",
     Dirty: "border-[var(--color-warning)] bg-[oklch(0.96_0.05_70)] text-[var(--color-warning)]",
     Maintenance: "border-border-strong bg-surface-2 text-text-secondary",
-  }[s] as any) || "border-border bg-surface text-text-secondary");
+  })[s] as string) || "border-border bg-surface text-text-secondary";
 
 type Tab = "checkin" | "move" | "ooo" | "services" | "upgrade";
+type TabDef = { id: Tab; label: string; icon: React.ComponentType<{ className?: string }> };
+type BadgeTone = ComponentProps<typeof StatusBadge>["tone"];
 
 export function FrontDeskFeature() {
+  const { data: arrivalsToday = [] } = useArrivalsTodayQuery();
+  const { data: departuresToday = [] } = useDeparturesTodayQuery();
+
   const [tab, setTab] = useState<Tab>("checkin");
 
   return (
@@ -48,9 +59,9 @@ export function FrontDeskFeature() {
         }
       />
 
-      <div className="space-y-6 p-6">
+      <div className="responsive-page-x space-y-5 py-4 sm:space-y-6 sm:py-6">
         {/* KPI strip */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <KpiCard label="In House" value="84" accent="info" />
           <KpiCard label="Arrivals" value="24" accent="success" />
           <KpiCard label="Departures" value="18" accent="warning" />
@@ -59,14 +70,17 @@ export function FrontDeskFeature() {
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-1 rounded-md border border-border bg-surface p-1 w-fit">
-          {([
-            { id: "checkin", label: "Active check-in", icon: KeyRound },
-            { id: "move", label: "Room move", icon: MoveRight },
-            { id: "ooo", label: "Out of order", icon: Wrench },
-            { id: "upgrade", label: "Upgrade", icon: ArrowUpCircle },
-            { id: "services", label: "Guest services", icon: Headset },
-          ] as { id: Tab; label: string; icon: any }[]).map((t) => {
+        <div className="w-full overflow-x-auto">
+          <div className="flex min-w-max gap-1 rounded-md border border-border bg-surface p-1">
+          {(
+            [
+              { id: "checkin", label: "Active check-in", icon: KeyRound },
+              { id: "move", label: "Room move", icon: MoveRight },
+              { id: "ooo", label: "Out of order", icon: Wrench },
+              { id: "upgrade", label: "Upgrade", icon: ArrowUpCircle },
+              { id: "services", label: "Guest services", icon: Headset },
+            ] as TabDef[]
+          ).map((t) => {
             const Icon = t.icon;
             return (
               <button
@@ -83,6 +97,7 @@ export function FrontDeskFeature() {
               </button>
             );
           })}
+          </div>
         </div>
 
         {tab === "checkin" && (
@@ -105,12 +120,16 @@ export function FrontDeskFeature() {
                           .join("")}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-[13px] font-medium text-text-primary">{r.guest}</div>
+                        <div className="truncate text-[13px] font-medium text-text-primary">
+                          {r.guest}
+                        </div>
                         <div className="text-[11px] text-text-secondary">
                           {r.id} · {r.room} · {r.nights}N
                         </div>
                       </div>
-                      <StatusBadge tone={r.status === "Confirmed" ? "success" : "warning"}>
+                      <StatusBadge
+                        tone={(r.status === "Confirmed" ? "success" : "warning") as BadgeTone}
+                      >
                         {r.status}
                       </StatusBadge>
                     </li>
@@ -127,11 +146,15 @@ export function FrontDeskFeature() {
                       <li key={i} className="flex items-center justify-between px-4 py-3">
                         <div>
                           <div className="text-[13px] font-medium text-text-primary">{r.guest}</div>
-                          <div className="text-[11px] text-text-secondary">Room {r.room} · 11:00</div>
+                          <div className="text-[11px] text-text-secondary">
+                            Room {r.room} · 11:00
+                          </div>
                         </div>
                         <span className="font-mono text-[12px]">
                           {r.balance ? (
-                            <span className="text-[var(--color-error)]">₹{r.balance.toLocaleString()}</span>
+                            <span className="text-[var(--color-error)]">
+                              ₹{r.balance.toLocaleString()}
+                            </span>
                           ) : (
                             "Settled"
                           )}

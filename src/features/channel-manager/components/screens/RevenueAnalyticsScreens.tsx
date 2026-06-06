@@ -12,7 +12,7 @@ export function OtaRevenueScreen() {
   const [channel, setChannel] = useState<SuChannel | "All">("All");
 
   const filtered = useMemo(
-    () => (channel === "All" ? data ?? [] : (data ?? []).filter((r) => r.channel === channel)),
+    () => (channel === "All" ? (data ?? []) : (data ?? []).filter((r) => r.channel === channel)),
     [data, channel],
   );
 
@@ -37,7 +37,12 @@ export function OtaRevenueScreen() {
       {data && (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <KpiCard label="Bookings · MTD" value={String(totals.bookings)} delta="↑ 18% vs LM" accent="info" />
+            <KpiCard
+              label="Bookings · MTD"
+              value={String(totals.bookings)}
+              delta="↑ 18% vs LM"
+              accent="info"
+            />
             <KpiCard label="Gross revenue" value={fmtINR(totals.revenue)} accent="brand" />
             <KpiCard label="Commission" value={fmtINR(totals.commission)} accent="warning" />
             <KpiCard label="Net revenue" value={fmtINR(totals.net)} accent="success" />
@@ -47,28 +52,51 @@ export function OtaRevenueScreen() {
 
           <Card>
             <CardHeader title="Channel revenue breakdown" hint="Month to date · SU synced" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[800px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Channel", "Bookings", "Revenue", "ADR", "Commission", "Net revenue", "Share"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
+                    {[
+                      "Channel",
+                      "Bookings",
+                      "Revenue",
+                      "ADR",
+                      "Commission",
+                      "Net revenue",
+                      "Share",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.channel} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={r.channel}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3 font-medium">{r.channel}</td>
                       <td className="px-4 py-3 font-mono">{r.bookings}</td>
                       <td className="px-4 py-3 font-mono">{fmtINR(r.revenue)}</td>
                       <td className="px-4 py-3 font-mono">₹{r.adr.toLocaleString("en-IN")}</td>
-                      <td className="px-4 py-3 font-mono text-[var(--color-warning)]">{fmtINR(r.commission)}</td>
-                      <td className="px-4 py-3 font-mono text-primary-pressed">{fmtINR(r.netRevenue)}</td>
+                      <td className="px-4 py-3 font-mono text-[var(--color-warning)]">
+                        {fmtINR(r.commission)}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-primary-pressed">
+                        {fmtINR(r.netRevenue)}
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="h-1.5 flex-1 max-w-[80px] rounded-full bg-surface-2">
-                            <div className="h-full rounded-full bg-primary" style={{ width: `${r.share}%` }} />
+                            <div
+                              className="h-full rounded-full bg-primary"
+                              style={{ width: `${r.share}%` }}
+                            />
                           </div>
                           <span className="font-mono text-[12px]">{r.share}%</span>
                         </div>
@@ -109,7 +137,7 @@ export function AnalyticsScreen() {
   const [channel, setChannel] = useState<SuChannel | "All">("All");
 
   const filtered = useMemo(
-    () => (channel === "All" ? data ?? [] : (data ?? []).filter((r) => r.channel === channel)),
+    () => (channel === "All" ? (data ?? []) : (data ?? []).filter((r) => r.channel === channel)),
     [data, channel],
   );
 
@@ -124,32 +152,68 @@ export function AnalyticsScreen() {
       {data && (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <KpiCard label="Avg conversion" value={`${(filtered.reduce((a, r) => a + r.conversion, 0) / filtered.length).toFixed(1)}%`} accent="brand" />
-            <KpiCard label="Total impressions" value={`${Math.round(filtered.reduce((a, r) => a + r.impressions, 0) / 1000)}k`} accent="info" />
-            <KpiCard label="Avg cancellation" value={`${(filtered.reduce((a, r) => a + r.cancellationRate, 0) / filtered.length).toFixed(1)}%`} accent="warning" />
-            <KpiCard label="Avg lead time" value={`${Math.round(filtered.reduce((a, r) => a + r.avgLeadTime, 0) / filtered.length)}d`} accent="success" />
+            <KpiCard
+              label="Avg conversion"
+              value={`${(filtered.reduce((a, r) => a + r.conversion, 0) / filtered.length).toFixed(1)}%`}
+              accent="brand"
+            />
+            <KpiCard
+              label="Total impressions"
+              value={`${Math.round(filtered.reduce((a, r) => a + r.impressions, 0) / 1000)}k`}
+              accent="info"
+            />
+            <KpiCard
+              label="Avg cancellation"
+              value={`${(filtered.reduce((a, r) => a + r.cancellationRate, 0) / filtered.length).toFixed(1)}%`}
+              accent="warning"
+            />
+            <KpiCard
+              label="Avg lead time"
+              value={`${Math.round(filtered.reduce((a, r) => a + r.avgLeadTime, 0) / filtered.length)}d`}
+              accent="success"
+            />
           </div>
 
           <ChannelFilterToolbar channel={channel} onChannel={setChannel} />
 
           <Card>
             <CardHeader title="Channel analytics" hint="Performance metrics · last 30 days" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[800px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Channel", "Impressions", "Conversion", "Bookings", "Revenue", "Cancel rate", "Lead time"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
+                    {[
+                      "Channel",
+                      "Impressions",
+                      "Conversion",
+                      "Bookings",
+                      "Revenue",
+                      "Cancel rate",
+                      "Lead time",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.channel} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={r.channel}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3 font-medium">{r.channel}</td>
-                      <td className="px-4 py-3 font-mono">{r.impressions.toLocaleString("en-IN")}</td>
+                      <td className="px-4 py-3 font-mono">
+                        {r.impressions.toLocaleString("en-IN")}
+                      </td>
                       <td className="px-4 py-3">
-                        <StatusBadge tone={r.conversion >= 2.5 ? "success" : "warning"}>{r.conversion}%</StatusBadge>
+                        <StatusBadge tone={r.conversion >= 2.5 ? "success" : "warning"}>
+                          {r.conversion}%
+                        </StatusBadge>
                       </td>
                       <td className="px-4 py-3 font-mono">{r.bookings}</td>
                       <td className="px-4 py-3 font-mono">{fmtINR(r.revenue)}</td>

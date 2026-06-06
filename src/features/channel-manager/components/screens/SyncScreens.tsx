@@ -4,6 +4,7 @@ import { Button, Card, CardHeader, KpiCard, StatusBadge } from "@/components/ui/
 import { suClient } from "@/services/su/client";
 import type { SuChannel } from "@/types/channel-manager";
 import { ChannelManagerShell } from "../ChannelManagerShell";
+import { SyncJobTable } from "../SyncJobTable";
 import { useSuData } from "../../hooks/useSuData";
 import { ChannelFilterToolbar, fmtINR, LoadingBlock, ErrorBlock, mapTone } from "../shared";
 
@@ -33,7 +34,10 @@ export function ReservationSyncScreen() {
   const handlePull = async () => {
     setSyncing(true);
     try {
-      await suClient.triggerSync({ types: ["Reservations"], channels: channel === "All" ? undefined : [channel] });
+      await suClient.triggerSync({
+        types: ["Reservations"],
+        channels: channel === "All" ? undefined : [channel],
+      });
       reload();
     } finally {
       setSyncing(false);
@@ -64,7 +68,12 @@ export function ReservationSyncScreen() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <ChannelFilterToolbar channel={channel} onChannel={setChannel} onSync={handlePull} syncing={syncing} />
+            <ChannelFilterToolbar
+              channel={channel}
+              onChannel={setChannel}
+              onSync={handlePull}
+              syncing={syncing}
+            />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -78,12 +87,27 @@ export function ReservationSyncScreen() {
 
           <Card>
             <CardHeader title="Reservation sync queue" hint="OTA ref ↔ PMS ref" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[900px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Channel", "OTA ref", "PMS ref", "Guest", "Check-in", "Amount", "Status", "Synced at", "Actions"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
+                    {[
+                      "Channel",
+                      "OTA ref",
+                      "PMS ref",
+                      "Guest",
+                      "Check-in",
+                      "Amount",
+                      "Status",
+                      "Synced at",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
@@ -108,7 +132,9 @@ export function ReservationSyncScreen() {
                       <td className="px-4 py-3 text-text-secondary">{r.syncedAt}</td>
                       <td className="px-4 py-3">
                         {(r.status === "Conflict" || r.status === "Failed") && (
-                          <Button variant="outline" size="sm">Resolve</Button>
+                          <Button variant="outline" size="sm">
+                            Resolve
+                          </Button>
                         )}
                       </td>
                     </tr>
@@ -155,8 +181,16 @@ export function SyncLogsScreen() {
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <KpiCard label="Total jobs" value={String(data.length)} accent="info" />
-            <KpiCard label="Success" value={String(data.filter((l) => l.status === "Success").length)} accent="success" />
-            <KpiCard label="Warnings" value={String(data.filter((l) => l.status === "Warning").length)} accent="warning" />
+            <KpiCard
+              label="Success"
+              value={String(data.filter((l) => l.status === "Success").length)}
+              accent="success"
+            />
+            <KpiCard
+              label="Warnings"
+              value={String(data.filter((l) => l.status === "Warning").length)}
+              accent="warning"
+            />
             <KpiCard label="Errors" value={String(errors)} accent="error" />
           </div>
 
@@ -167,7 +201,15 @@ export function SyncLogsScreen() {
               onChange={(e) => setTypeFilter(e.target.value)}
               className="h-8 rounded-md border border-border bg-surface px-2 text-[12px]"
             >
-              {["All", "Inventory", "Rates", "Reservations", "Content", "Images", "Restrictions"].map((t) => (
+              {[
+                "All",
+                "Inventory",
+                "Rates",
+                "Reservations",
+                "Content",
+                "Images",
+                "Restrictions",
+              ].map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>
@@ -175,33 +217,7 @@ export function SyncLogsScreen() {
 
           <Card>
             <CardHeader title="Sync log" hint="SU API job history" />
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px] text-[13px]">
-                <thead>
-                  <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["ID", "Channel", "Type", "Action", "Status", "Records", "Time", "Message"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((log) => (
-                    <tr key={log.id} className="border-b border-border-subtle hover:bg-surface-2/30">
-                      <td className="px-4 py-2.5 font-mono text-[11px]">{log.id}</td>
-                      <td className="px-4 py-2.5">{log.channel}</td>
-                      <td className="px-4 py-2.5 text-text-secondary">{log.type}</td>
-                      <td className="px-4 py-2.5">{log.action}</td>
-                      <td className="px-4 py-2.5">
-                        <StatusBadge tone={mapTone(log.status)}>{log.status}</StatusBadge>
-                      </td>
-                      <td className="px-4 py-2.5 font-mono">{log.records}</td>
-                      <td className="px-4 py-2.5 text-text-secondary">{log.at}</td>
-                      <td className="max-w-[200px] truncate px-4 py-2.5 text-[12px] text-text-secondary">{log.message ?? "—"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <SyncJobTable rows={filtered} />
           </Card>
         </>
       )}

@@ -10,6 +10,116 @@ export interface Reservation {
   status: "Confirmed" | "Checked-In" | "Checked-Out" | "Pending" | "No-Show" | "Cancelled";
   source: string;
   balance: number;
+  reservationType?: ReservationType;
+  frontDeskStatus?: FrontDeskStatus;
+  billingMode?: BillingMode;
+  folioState?: FolioState;
+  checkinChecklist?: FrontDeskChecklistItem[];
+  checkoutChecklist?: FrontDeskChecklistItem[];
+  blockerCodes?: FrontDeskBlockerCode[];
+  groupMeta?: GroupMeta;
+  corporateMeta?: CorporateMeta;
+  packageMeta?: PackageMeta;
+  walkinMeta?: WalkinMeta;
+  eventMeta?: EventMeta;
+}
+
+export type ReservationType =
+  | "individual"
+  | "group"
+  | "corporate"
+  | "package"
+  | "walkin"
+  | "event";
+
+export type FrontDeskStatus =
+  | "pre_arrival"
+  | "pending_id"
+  | "pending_payment"
+  | "room_assigned"
+  | "checked_in"
+  | "checkout_due"
+  | "checkout_in_progress"
+  | "checked_out"
+  | "no_show"
+  | "cancelled";
+
+export type BillingMode = "guest_pay" | "direct_bill" | "split";
+
+export type FolioState = "open" | "partially_settled" | "settled" | "transferred_to_city_ledger";
+
+export type FrontDeskChecklistKey =
+  | "find_guest"
+  | "verify_id"
+  | "assign_room"
+  | "collect_payment"
+  | "issue_key"
+  | "review_folio"
+  | "return_key"
+  | "send_invoice"
+  | "handover_hk";
+
+export type FrontDeskBlockerCode =
+  | "missing_id"
+  | "pending_po"
+  | "unsettled_folio"
+  | "room_not_ready"
+  | "pickup_mismatch"
+  | "event_overage_pending";
+
+export interface FrontDeskChecklistItem {
+  key: FrontDeskChecklistKey;
+  label: string;
+  done: boolean;
+  required: boolean;
+  note?: string;
+}
+
+export interface GroupMeta {
+  blockName: string;
+  blockedRooms: number;
+  pickedUpRooms: number;
+  roomingListReady: boolean;
+  settlementMode: "master" | "split";
+}
+
+export interface CorporateMeta {
+  company: string;
+  poRef?: string;
+  costCenter?: string;
+  cityLedgerCode?: string;
+}
+
+export interface PackageMeta {
+  packageName: string;
+  inclusions: string[];
+  benefitsPosted: boolean;
+  unusedEntitlementCredit?: number;
+}
+
+export interface WalkinMeta {
+  idVerified: boolean;
+  depositAmount: number;
+  vehicleNo?: string;
+}
+
+export interface EventMeta {
+  eventName: string;
+  venue: string;
+  organizer: string;
+  contact: string;
+  billingSplit: "venue_only" | "venue_catering" | "venue_catering_av";
+  overageAmount?: number;
+}
+
+export interface FrontDeskWorkflowReservation extends Reservation {
+  reservationType: ReservationType;
+  frontDeskStatus: FrontDeskStatus;
+  billingMode: BillingMode;
+  folioState: FolioState;
+  checkinChecklist: FrontDeskChecklistItem[];
+  checkoutChecklist: FrontDeskChecklistItem[];
+  blockerCodes: FrontDeskBlockerCode[];
 }
 
 export interface HousekeepingRoom {
@@ -114,7 +224,6 @@ export interface GuestProfile {
   stays?: { id: string; room: string; ci: string; co: string; amount: number }[];
 }
 
-export type Guest = GuestProfile;
 
 export interface WaitlistEntry {
   id: string;
@@ -190,6 +299,104 @@ export interface PricingRule {
   adjustment: string;
   status: "Active" | "Paused";
   lastRun: string;
+}
+
+export interface MealPlan {
+  id: string;
+  code: "EP" | "CP" | "MAP" | "AP" | "AI" | "UAI";
+  name: string;
+  description: string;
+  includedMeals: string[];
+  taxPercent: number;
+  priceAdjustment: number;
+  status: "Active" | "Inactive";
+}
+
+export interface RatePlanPolicy {
+  id: string;
+  cancellationPolicy: string;
+  refundPolicy: string;
+  advanceBookingRule: string;
+  minStayRule: string;
+  maxStayRule: string;
+  discountRule: string;
+}
+
+export interface RatePlan {
+  id: string;
+  name: string;
+  description: string;
+  benefits: string[];
+  policyId: string;
+  discountPercent: number;
+  status: "Active" | "Inactive";
+}
+
+export interface PackageItem {
+  id: string;
+  packageId: string;
+  type: "room" | "meal" | "service" | "activity";
+  name: string;
+  included: boolean;
+}
+
+export interface Package {
+  id: string;
+  name: string;
+  description: string;
+  basePrice: number;
+  status: "Active" | "Draft" | "Inactive";
+}
+
+export interface ReservationMealPlan {
+  reservationId: string;
+  mealPlanId: string;
+  nightlyAdjustment: number;
+}
+
+export interface ReservationRatePlan {
+  reservationId: string;
+  ratePlanId: string;
+  discountAmount: number;
+}
+
+export type AddOnPricingMode = "fixed" | "percentage" | "per_day" | "per_guest";
+
+export interface ReservationAddOn {
+  reservationId: string;
+  addOnId: string;
+  quantity: number;
+  pricingMode: AddOnPricingMode;
+  unitPrice: number;
+  totalAmount: number;
+}
+
+export interface ReservationPackage {
+  reservationId: string;
+  packageId: string;
+  quantity: number;
+  totalAmount: number;
+}
+
+export interface OccupancyPricing {
+  occupancyType: "single" | "double" | "triple" | "quad";
+  multiplier: number;
+}
+
+export interface PricingBreakdownLine {
+  label: string;
+  amount: number;
+}
+
+export interface ReservationPricingBreakdown {
+  roomRate: number;
+  mealPlanCharges: number;
+  packageCharges: number;
+  addOnCharges: number;
+  taxes: number;
+  extraGuestCharges: number;
+  total: number;
+  lines: PricingBreakdownLine[];
 }
 
 export interface CorporateAccount {
@@ -327,5 +534,165 @@ export interface PortfolioProperty {
   stars: number;
 }
 
-export type Guest = GuestProfile;
+export type AIDemandBand = "Low" | "Medium" | "High" | "Peak";
 
+export interface AIDemandFunnelPoint {
+  totalRooms: number;
+  soldByTime: number;
+  rooms: number;
+  occupancyPct: number;
+  price: number;
+  stageType: "Actual" | "Forecast";
+  sellProbability: number;
+  demandBand: AIDemandBand;
+  ts: string;
+}
+
+export interface AIDemandSnapshot {
+  demandScore: number;
+  occupancyPct: number;
+  availableRooms: number;
+  currentAdr: number;
+  recommendedAdr: number;
+  revenueLiftPct: number;
+}
+
+export interface PriceForecastPoint {
+  time: string;
+  predictedPrice: number;
+}
+
+export interface OccupancyPricePoint {
+  time: string;
+  occupancyPct: number;
+  price: number;
+}
+
+export interface RevenueForecast {
+  today: number;
+  next7Days: number;
+  opportunityScore: number;
+}
+
+export interface CompetitorRateCard {
+  hotel: string;
+  distanceKm: number;
+  rate: number;
+  deltaPct: number;
+  position: "Lower" | "Parity" | "Higher";
+}
+
+export interface AIInsight {
+  id: string;
+  severity: "Info" | "Warning" | "Critical";
+  message: string;
+  action: string;
+  confidence: number;
+}
+
+export interface PricingOverrideSettings {
+  autoPricing: boolean;
+  minPrice: number;
+  maxPrice: number;
+  surgeCapPct: number;
+}
+
+export interface AIRevenueDashboardData {
+  demandFunnel: AIDemandFunnelPoint[];
+  demandSnapshot: AIDemandSnapshot;
+  priceForecast: PriceForecastPoint[];
+  occupancyVsPrice: OccupancyPricePoint[];
+  revenueForecast: RevenueForecast;
+  competitors: CompetitorRateCard[];
+  insights: AIInsight[];
+  overrides: PricingOverrideSettings;
+  asOf: string;
+}
+
+export type WebsiteBuilderDevice = "desktop" | "tablet" | "mobile";
+
+export type WebsiteBuilderSectionType =
+  | "hero"
+  | "rooms"
+  | "offers"
+  | "gallery"
+  | "faq"
+  | "text"
+  | "booking";
+
+export interface WebsiteBuilderSection {
+  id: string;
+  name: string;
+  type: WebsiteBuilderSectionType;
+  visible: boolean;
+  scheduledAt?: string;
+}
+
+export interface WebsiteBuilderPage {
+  id: string;
+  name: string;
+  slug: string;
+  status: "Draft" | "Ready" | "Published";
+  scheduledPublishAt?: string;
+  sections: WebsiteBuilderSection[];
+  seoScore: number;
+}
+
+export interface WebsiteBuilderThemeOption {
+  id: string;
+  name: string;
+  category: "Core" | "Luxury" | "Minimal" | "Business";
+}
+
+export interface WebsiteBuilderRoomSync {
+  roomType: string;
+  pmsUpdatedAt: string;
+  webStatus: "Synced" | "Pending publish" | "Override active";
+  overrideActive: boolean;
+}
+
+export interface WebsiteBuilderVersion {
+  id: string;
+  createdAt: string;
+  createdBy: string;
+  note: string;
+  pageId?: string;
+  snapshotPages?: WebsiteBuilderPage[];
+}
+
+export interface WebsiteBuilderApproval {
+  id: string;
+  pageName: string;
+  requestedBy: string;
+  requestedAt: string;
+  status: "Pending" | "Approved" | "Rejected";
+  approver?: string;
+  decidedAt?: string;
+}
+
+export interface WebsiteBuilderPublishEvent {
+  id: string;
+  publishedAt: string;
+  publishedBy: string;
+  pageCount: number;
+  note: string;
+}
+
+export interface WebsiteBuilderWorkspace {
+  id: string;
+  propertyId: string;
+  siteName: string;
+  selectedPageId: string;
+  selectedThemeId: string;
+  previewDevice: WebsiteBuilderDevice;
+  autosaveEnabled: boolean;
+  pages: WebsiteBuilderPage[];
+  themeOptions: WebsiteBuilderThemeOption[];
+  roomSync: WebsiteBuilderRoomSync[];
+  versions: WebsiteBuilderVersion[];
+  lastAction: string;
+  lastSavedAt: string;
+  lastPublishedAt?: string;
+}
+
+export type Guest = GuestProfile;

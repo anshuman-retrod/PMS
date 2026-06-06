@@ -55,7 +55,10 @@ export function RestrictionsScreen() {
             <ChannelFilterToolbar
               channel={channel}
               onChannel={setChannel}
-              onSync={async () => { await suClient.triggerSync({ types: ["Restrictions"] }); reload(); }}
+              onSync={async () => {
+                await suClient.triggerSync({ types: ["Restrictions"] });
+                reload();
+              }}
             />
             <select
               value={kindFilter}
@@ -74,9 +77,16 @@ export function RestrictionsScreen() {
               <table className="w-full min-w-[700px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Date", "Room type", "Channel", "Restriction", "Value", "Actions"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
-                    ))}
+                    {["Date", "Room type", "Channel", "Restriction", "Value", "Actions"].map(
+                      (h) => (
+                        <th
+                          key={h}
+                          className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                        >
+                          {h}
+                        </th>
+                      ),
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -93,7 +103,9 @@ export function RestrictionsScreen() {
                       </td>
                       <td className="px-4 py-3 font-mono">{r.value ?? "—"}</td>
                       <td className="px-4 py-3">
-                        <Button variant="ghost" size="sm">Edit</Button>
+                        <Button variant="ghost" size="sm">
+                          Edit
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -133,7 +145,11 @@ export function MultiPropertyScreen() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <KpiCard label="Properties" value={String(totals.properties)} accent="brand" />
             <KpiCard label="Total bookings" value={String(totals.bookings)} accent="info" />
-            <KpiCard label="Portfolio revenue" value={`₹${(totals.revenue / 100000).toFixed(1)} L`} accent="success" />
+            <KpiCard
+              label="Portfolio revenue"
+              value={`₹${(totals.revenue / 100000).toFixed(1)} L`}
+              accent="success"
+            />
             <KpiCard label="Sync errors" value={String(totals.errors)} accent="error" />
           </div>
 
@@ -143,14 +159,30 @@ export function MultiPropertyScreen() {
               <table className="w-full min-w-[800px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    {["Property", "City", "Channels live", "Sync health", "Bookings", "Revenue", "Errors"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{h}</th>
+                    {[
+                      "Property",
+                      "City",
+                      "Channels live",
+                      "Sync health",
+                      "Bookings",
+                      "Revenue",
+                      "Errors",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((p) => (
-                    <tr key={p.propertyId} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={p.propertyId}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3">
                         <p className="font-medium">{p.propertyName}</p>
                         <p className="font-mono text-[11px] text-text-secondary">{p.propertyId}</p>
@@ -169,9 +201,13 @@ export function MultiPropertyScreen() {
                         </div>
                       </td>
                       <td className="px-4 py-3 font-mono">{p.bookingsMtd}</td>
-                      <td className="px-4 py-3 font-mono">₹{(p.revenueMtd / 100000).toFixed(1)} L</td>
+                      <td className="px-4 py-3 font-mono">
+                        ₹{(p.revenueMtd / 100000).toFixed(1)} L
+                      </td>
                       <td className="px-4 py-3">
-                        <StatusBadge tone={p.errors === 0 ? "success" : "error"}>{p.errors}</StatusBadge>
+                        <StatusBadge tone={p.errors === 0 ? "success" : "error"}>
+                          {p.errors}
+                        </StatusBadge>
                       </td>
                     </tr>
                   ))}

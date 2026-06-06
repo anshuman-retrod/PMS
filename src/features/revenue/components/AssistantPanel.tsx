@@ -6,9 +6,15 @@ export function AssistantPanel() {
     <Card className="flex h-fit flex-col">
       <CardHeader title="Assistant" hint="⌘J to summon" />
       <div className="flex-1 space-y-3 p-5">
-        <Msg from="ai" text="Good morning, Aarav. I noticed weekend demand is climbing. Want a pricing summary?" />
+        <Msg
+          from="ai"
+          text="Good morning, Aarav. I noticed weekend demand is climbing. Want a pricing summary?"
+        />
         <Msg from="me" text="Yes, and include competitor parity for Deluxe rooms." />
-        <Msg from="ai" text="Across 4 comp-set hotels, your Deluxe King is priced 11% below the median. A ₹1,800 uplift maintains parity while preserving conversion." />
+        <Msg
+          from="ai"
+          text="Across 4 comp-set hotels, your Deluxe King is priced 11% below the median. A ₹1,800 uplift maintains parity while preserving conversion."
+        />
       </div>
       <div className="border-t border-border-subtle p-3">
         <div className="flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 focus-within:border-primary">
@@ -29,7 +35,9 @@ function Msg({ from, text }: { from: "ai" | "me"; text: string }) {
   return (
     <div
       className={`max-w-[90%] rounded-md px-3 py-2 text-[12px] leading-snug transition ${
-        from === "ai" ? "bg-surface-2 text-text-primary" : "ml-auto bg-primary text-primary-foreground"
+        from === "ai"
+          ? "bg-surface-2 text-text-primary"
+          : "ml-auto bg-primary text-primary-foreground"
       }`}
     >
       {from === "ai" && (

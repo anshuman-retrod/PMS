@@ -1,14 +1,19 @@
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { revenueKpis } from "@/services/mock/db";
+import { useRevenueKpisQuery } from "@/services/mock/queries";
 
 interface RevenueKpisProps {
   fmtINR: (n: number) => string;
 }
 
 export function RevenueKpis({ fmtINR }: RevenueKpisProps) {
+  const { data: revenueKpis = [] } = useRevenueKpisQuery();
+
   return (
     <Card>
-      <CardHeader title="Revenue · Today vs Budget vs STLY" hint="Visible to GM, Revenue, Finance" />
+      <CardHeader
+        title="Revenue · Today vs Budget vs STLY"
+        hint="Visible to GM, Revenue, Finance"
+      />
       <div className="grid grid-cols-2 gap-px bg-border-subtle md:grid-cols-4">
         {revenueKpis.map((k) => {
           const vBudget = ((k.today - k.budget) / k.budget) * 100;
@@ -24,13 +29,17 @@ export function RevenueKpis({ fmtINR }: RevenueKpisProps) {
               <div className="mt-2 space-y-0.5 text-[11px]">
                 <div className="flex justify-between">
                   <span className="text-text-disabled">vs Budget</span>
-                  <span className={okB ? "text-[var(--color-success)]" : "text-[var(--color-error)]"}>
+                  <span
+                    className={okB ? "text-[var(--color-success)]" : "text-[var(--color-error)]"}
+                  >
                     {okB ? "↑" : "↓"} {Math.abs(vBudget).toFixed(1)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-disabled">vs STLY</span>
-                  <span className={okS ? "text-[var(--color-success)]" : "text-[var(--color-error)]"}>
+                  <span
+                    className={okS ? "text-[var(--color-success)]" : "text-[var(--color-error)]"}
+                  >
                     {okS ? "↑" : "↓"} {Math.abs(vSTLY).toFixed(1)}%
                   </span>
                 </div>

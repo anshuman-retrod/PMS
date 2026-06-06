@@ -21,35 +21,100 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export function ProfileStep({ state, setState, disabled }: ProfileStepProps) {
   const p = state.profile;
-  const set = (patch: Partial<OnboardingState["profile"]>) =>
+  const setProfile = (patch: Partial<OnboardingState["profile"]>) =>
     setState((s) => ({ ...s, profile: { ...s.profile, ...patch } }));
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <Field label="Legal property name">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <Field label="Property name">
         <input
           disabled={disabled}
           className={inputCls}
-          value={p.name}
-          onChange={(e) => set({ name: e.target.value })}
+          value={p.propertyName}
+          onChange={(e) => setProfile({ propertyName: e.target.value })}
           placeholder="The Grand Palace"
         />
       </Field>
-      <Field label="Brand / chain">
+      <Field label="Property code">
         <input
           disabled={disabled}
           className={inputCls}
-          value={p.brand}
-          onChange={(e) => set({ brand: e.target.value })}
-          placeholder="Grand Palace Hotels"
+          value={p.propertyCode}
+          onChange={(e) => setProfile({ propertyCode: e.target.value.toUpperCase() })}
+          placeholder="GP-DEL-001"
         />
       </Field>
-      <Field label="Street address">
+      <Field label="Property type">
+        <select
+          disabled={disabled}
+          className={selectCls}
+          value={p.propertyType}
+          onChange={(e) =>
+            setProfile({
+              propertyType: e.target.value as OnboardingState["profile"]["propertyType"],
+            })
+          }
+        >
+          <option value="hotel">Hotel</option>
+          <option value="resort">Resort</option>
+          <option value="boutique_hotel">Boutique Hotel</option>
+          <option value="hotel_chain">Hotel Chain</option>
+          <option value="serviced_apartment">Serviced Apartment</option>
+          <option value="villa">Villa</option>
+          <option value="homestay">Homestay</option>
+        </select>
+      </Field>
+      <Field label="Property category">
         <input
           disabled={disabled}
           className={inputCls}
-          value={p.address}
-          onChange={(e) => set({ address: e.target.value })}
+          value={p.propertyCategory}
+          onChange={(e) => setProfile({ propertyCategory: e.target.value })}
+          placeholder="Luxury / Business / Midscale"
+        />
+      </Field>
+      <Field label="Brand name">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.brandName}
+          onChange={(e) => setProfile({ brandName: e.target.value })}
+          placeholder="Retrod Hotels"
+        />
+      </Field>
+      <Field label="Contact email">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.contactEmail}
+          onChange={(e) => setProfile({ contactEmail: e.target.value })}
+          placeholder="ops@retrod.com"
+        />
+      </Field>
+      <Field label="Contact phone">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.contactPhone}
+          onChange={(e) => setProfile({ contactPhone: e.target.value })}
+          placeholder="+91 98xxxxxx20"
+        />
+      </Field>
+      <Field label="Address line 1">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.addressLine1}
+          onChange={(e) => setProfile({ addressLine1: e.target.value })}
+        />
+      </Field>
+      <Field label="Address line 2">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.addressLine2}
+          onChange={(e) => setProfile({ addressLine2: e.target.value })}
+          placeholder="Area / landmark"
         />
       </Field>
       <Field label="City">
@@ -57,7 +122,15 @@ export function ProfileStep({ state, setState, disabled }: ProfileStepProps) {
           disabled={disabled}
           className={inputCls}
           value={p.city}
-          onChange={(e) => set({ city: e.target.value })}
+          onChange={(e) => setProfile({ city: e.target.value })}
+        />
+      </Field>
+      <Field label="State">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.state}
+          onChange={(e) => setProfile({ state: e.target.value })}
         />
       </Field>
       <Field label="Country">
@@ -65,7 +138,7 @@ export function ProfileStep({ state, setState, disabled }: ProfileStepProps) {
           disabled={disabled}
           className={inputCls}
           value={p.country}
-          onChange={(e) => set({ country: e.target.value })}
+          onChange={(e) => setProfile({ country: e.target.value })}
         />
       </Field>
       <Field label="Timezone">
@@ -73,9 +146,15 @@ export function ProfileStep({ state, setState, disabled }: ProfileStepProps) {
           disabled={disabled}
           className={selectCls}
           value={p.timezone}
-          onChange={(e) => set({ timezone: e.target.value })}
+          onChange={(e) => setProfile({ timezone: e.target.value })}
         >
-          {["Asia/Kolkata", "Asia/Dubai", "Asia/Singapore", "Europe/London", "America/New_York"].map((t) => (
+          {[
+            "Asia/Kolkata",
+            "Asia/Dubai",
+            "Asia/Singapore",
+            "Europe/London",
+            "America/New_York",
+          ].map((t) => (
             <option key={t}>{t}</option>
           ))}
         </select>
@@ -85,34 +164,45 @@ export function ProfileStep({ state, setState, disabled }: ProfileStepProps) {
           disabled={disabled}
           className={selectCls}
           value={p.currency}
-          onChange={(e) => set({ currency: e.target.value })}
+          onChange={(e) => setProfile({ currency: e.target.value })}
         >
           {["INR", "USD", "EUR", "GBP", "AED"].map((t) => (
             <option key={t}>{t}</option>
           ))}
         </select>
       </Field>
-      <Field label="Star rating">
-        <select
-          disabled={disabled}
-          className={selectCls}
-          value={p.starRating}
-          onChange={(e) => set({ starRating: Number(e.target.value) })}
-        >
-          {[3, 4, 5].map((t) => (
-            <option key={t} value={t}>
-              {t} ★
-            </option>
-          ))}
-        </select>
-      </Field>
-      <Field label="GSTIN">
+      <Field label="GST / VAT number">
         <input
           disabled={disabled}
           className={inputCls}
-          value={p.gstin}
-          onChange={(e) => set({ gstin: e.target.value })}
+          value={p.gstVatNumber}
+          onChange={(e) => setProfile({ gstVatNumber: e.target.value })}
           placeholder="07AAACR1234A1Z5"
+        />
+      </Field>
+      <Field label="Logo URL">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.logoUrl ?? ""}
+          onChange={(e) => setProfile({ logoUrl: e.target.value })}
+          placeholder="https://..."
+        />
+      </Field>
+      <Field label="Property image URLs (comma-separated)">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.imageUrls.join(", ")}
+          onChange={(e) =>
+            setProfile({
+              imageUrls: e.target.value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            })
+          }
+          placeholder="https://img1.jpg, https://img2.jpg"
         />
       </Field>
     </div>

@@ -21,15 +21,21 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
   const { cgst, sgst, total } = calcTax(sub);
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
       <Card>
         {/* Invoice header */}
-        <div className="border-b border-border px-8 py-6">
-          <div className="flex items-start justify-between">
+        <div className="border-b border-border px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="font-display text-[22px] font-semibold text-text-primary">The Grand Palace</div>
-              <div className="text-[12px] text-text-secondary">Connaught Place, New Delhi 110001</div>
-              <div className="text-[11px] text-text-disabled">GSTIN 07AABCT1234M1Z5 · PAN AABCT1234M · State 07-Delhi</div>
+              <div className="font-display text-[22px] font-semibold text-text-primary">
+                The Grand Palace
+              </div>
+              <div className="text-[12px] text-text-secondary">
+                Connaught Place, New Delhi 110001
+              </div>
+              <div className="text-[11px] text-text-disabled">
+                GSTIN 07AABCT1234M1Z5 · PAN AABCT1234M · State 07-Delhi
+              </div>
             </div>
             <div className="text-right">
               <div className="label-uppercase">Tax Invoice</div>
@@ -39,27 +45,37 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-6 text-[12px]">
+          <div className="mt-5 grid grid-cols-1 gap-5 text-[12px] sm:grid-cols-2 sm:gap-6">
             <div>
               <div className="label-uppercase mb-1">Billed to</div>
               <div className="font-medium text-text-primary">Priya Sharma</div>
-              <div className="text-text-secondary">14 Marine Drive, Mumbai 400020 · Maharashtra</div>
+              <div className="text-text-secondary">
+                14 Marine Drive, Mumbai 400020 · Maharashtra
+              </div>
               <div className="text-text-secondary">priya.sharma@email.com · +91 98201 23456</div>
             </div>
             <div>
               <div className="label-uppercase mb-1">Stay</div>
               <div className="text-text-primary">15 May → 17 May 2026 · 2 nights</div>
-              <div className="text-text-secondary">Reservation RES-2042 · Room 312 · Premier Suite</div>
-              <div className="text-text-secondary">Place of supply · 27-Maharashtra (IGST applicable)</div>
+              <div className="text-text-secondary">
+                Reservation RES-2042 · Room 312 · Premier Suite
+              </div>
+              <div className="text-text-secondary">
+                Place of supply · 27-Maharashtra (IGST applicable)
+              </div>
             </div>
           </div>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-border bg-surface-2/40 text-left">
               {["Date", "Description", "HSN/SAC", "Qty", "Amount"].map((h) => (
-                <th key={h} className="px-6 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                <th
+                  key={h}
+                  className="px-6 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                >
                   {h}
                 </th>
               ))}
@@ -74,14 +90,17 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
                 </td>
                 <td className="px-6 py-2.5 font-mono text-text-secondary">{f.hsn}</td>
                 <td className="px-6 py-2.5 font-mono text-text-secondary">{f.qty}</td>
-                <td className="px-6 py-2.5 text-right font-mono text-text-primary">₹{f.amt.toLocaleString()}</td>
+                <td className="px-6 py-2.5 text-right font-mono text-text-primary">
+                  ₹{f.amt.toLocaleString()}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
 
-        <div className="border-t border-border-subtle px-6 py-4">
-          <div className="ml-auto w-72 space-y-1.5 text-[13px]">
+        <div className="border-t border-border-subtle px-4 py-4 sm:px-6">
+          <div className="ml-auto w-full max-w-[320px] space-y-1.5 text-[13px]">
             <Row label="Subtotal" value={`₹${sub.toLocaleString()}`} />
             <Row label="CGST · 9%" value={`₹${cgst.toLocaleString()}`} />
             <Row label="SGST · 9%" value={`₹${sgst.toLocaleString()}`} />
@@ -92,9 +111,9 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border bg-surface-2/40 px-6 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-surface-2/40 px-4 py-3 sm:px-6">
           <StatusBadge tone="success">Settled · 17 May 12:42 · Visa **4421</StatusBadge>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" size="sm">
               <Printer className="h-3.5 w-3.5" />
               Print
@@ -115,7 +134,11 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
         <CardHeader title="Payment timeline" />
         <ol className="space-y-4 p-5">
           {[
-            { t: "17 May · 12:42", text: "Settled in full · Visa **4421 · ₹37,326", tone: "success" },
+            {
+              t: "17 May · 12:42",
+              text: "Settled in full · Visa **4421 · ₹37,326",
+              tone: "success",
+            },
             { t: "16 May · 19:14", text: "Spa treatment charged · ₹4,800", tone: "info" },
             { t: "15 May · 14:08", text: "Pre-authorization · ₹22,000", tone: "neutral" },
             { t: "12 May · 09:30", text: "Booking confirmed · Direct", tone: "neutral" },
@@ -133,11 +156,25 @@ export function FolioView({ folio, calcTax }: FolioViewProps) {
   );
 }
 
-function Row({ label, value, bold, muted, tone }: { label: string; value: string; bold?: boolean; muted?: boolean; tone?: "success" }) {
+function Row({
+  label,
+  value,
+  bold,
+  muted,
+  tone,
+}: {
+  label: string;
+  value: string;
+  bold?: boolean;
+  muted?: boolean;
+  tone?: "success";
+}) {
   return (
     <div className="flex justify-between">
       <span className={muted ? "text-text-disabled" : "text-text-secondary"}>{label}</span>
-      <span className={`font-mono ${bold ? "font-semibold" : ""} ${tone === "success" ? "text-[var(--color-success)]" : "text-text-primary"}`}>
+      <span
+        className={`font-mono ${bold ? "font-semibold" : ""} ${tone === "success" ? "text-[var(--color-success)]" : "text-text-primary"}`}
+      >
         {value}
       </span>
     </div>

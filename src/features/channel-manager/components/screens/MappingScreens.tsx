@@ -54,7 +54,7 @@ export function RoomMappingScreen() {
 
       {data && (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <KpiCard label="Mapped" value={String(stats.mapped)} accent="success" />
             <KpiCard label="Mismatch" value={String(stats.mismatch)} accent="warning" />
             <KpiCard label="Unmapped" value={String(stats.unmapped)} accent="error" />
@@ -62,7 +62,12 @@ export function RoomMappingScreen() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <ChannelFilterToolbar channel={channel} onChannel={setChannel} onSync={handleSync} syncing={syncing} />
+            <ChannelFilterToolbar
+              channel={channel}
+              onChannel={setChannel}
+              onSync={handleSync}
+              syncing={syncing}
+            />
             <Button variant="outline" size="sm" onClick={reload}>
               <RefreshCcw className="h-3.5 w-3.5" />
               Refresh
@@ -71,7 +76,7 @@ export function RoomMappingScreen() {
 
           <Card>
             <CardHeader title="Room type mapping grid" hint="PMS ↔ OTA room codes" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[1100px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
@@ -79,7 +84,10 @@ export function RoomMappingScreen() {
                       PMS room type
                     </th>
                     {(channel === "All" ? SU_CHANNELS : [channel]).map((ch) => (
-                      <th key={ch} className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      <th
+                        key={ch}
+                        className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
                         {ch}
                       </th>
                     ))}
@@ -87,17 +95,24 @@ export function RoomMappingScreen() {
                 </thead>
                 <tbody>
                   {data.map((row) => (
-                    <tr key={row.pmsRoomCode} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={row.pmsRoomCode}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="sticky left-0 bg-surface px-4 py-3">
                         <p className="font-medium">{row.pmsRoomType}</p>
-                        <p className="font-mono text-[11px] text-text-secondary">{row.pmsRoomCode}</p>
+                        <p className="font-mono text-[11px] text-text-secondary">
+                          {row.pmsRoomCode}
+                        </p>
                       </td>
                       {(channel === "All" ? SU_CHANNELS : [channel]).map((ch) => {
                         const m = row.channels[ch];
                         return (
                           <td key={ch} className="px-3 py-3">
                             <StatusBadge tone={mapTone(m.status)}>{m.status}</StatusBadge>
-                            <p className="mt-1 font-mono text-[11px] text-text-secondary">{m.otaRoomId}</p>
+                            <p className="mt-1 font-mono text-[11px] text-text-secondary">
+                              {m.otaRoomId}
+                            </p>
                             <p className="text-[11px] text-text-secondary">{m.otaRoomName}</p>
                           </td>
                         );
@@ -134,30 +149,49 @@ export function RatePlanMappingScreen() {
 
       {data && (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <KpiCard label="PMS rate plans" value={String(data.length)} accent="brand" />
             <KpiCard label="Channels" value={String(SU_CHANNELS.length)} accent="info" />
-            <KpiCard label="Pending mappings" value={String(data.flatMap((r) => SU_CHANNELS.filter((c) => r.channels[c].status === "Pending")).length)} accent="warning" />
+            <KpiCard
+              label="Pending mappings"
+              value={String(
+                data.flatMap((r) => SU_CHANNELS.filter((c) => r.channels[c].status === "Pending"))
+                  .length,
+              )}
+              accent="warning"
+            />
           </div>
 
           <ChannelFilterToolbar channel={channel} onChannel={setChannel} />
 
           <Card>
             <CardHeader title="Rate plan mapping" hint="BAR · Corporate · NRF" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[900px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">PMS rate plan</th>
-                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">Meal plan</th>
+                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      PMS rate plan
+                    </th>
+                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      Meal plan
+                    </th>
                     {(channel === "All" ? SU_CHANNELS : [channel]).map((ch) => (
-                      <th key={ch} className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{ch}</th>
+                      <th
+                        key={ch}
+                        className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {ch}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((row) => (
-                    <tr key={row.pmsRatePlan} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={row.pmsRatePlan}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3 font-medium">{row.pmsRatePlan}</td>
                       <td className="px-4 py-3 text-text-secondary">{row.mealPlan}</td>
                       {(channel === "All" ? SU_CHANNELS : [channel]).map((ch) => {
@@ -165,7 +199,9 @@ export function RatePlanMappingScreen() {
                         return (
                           <td key={ch} className="px-3 py-3">
                             <StatusBadge tone={mapTone(m.status)}>{m.status}</StatusBadge>
-                            <p className="mt-1 font-mono text-[11px] text-text-secondary">{m.otaRatePlanId}</p>
+                            <p className="mt-1 font-mono text-[11px] text-text-secondary">
+                              {m.otaRatePlanId}
+                            </p>
                           </td>
                         );
                       })}

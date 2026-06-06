@@ -46,8 +46,14 @@ export function PropertyFeature() {
         <Card>
           <CardHeader title="Policies" />
           <div className="space-y-3 p-5 text-[13px] text-text-secondary leading-relaxed">
-            <p>Cancellation up to 48 hours before arrival is complimentary. Within 48 hours, one night is charged.</p>
-            <p>Children under 12 stay free with existing bedding. Extra bed available at ₹2,500 / night.</p>
+            <p>
+              Cancellation up to 48 hours before arrival is complimentary. Within 48 hours, one
+              night is charged.
+            </p>
+            <p>
+              Children under 12 stay free with existing bedding. Extra bed available at ₹2,500 /
+              night.
+            </p>
             <p>Pet-friendly suites available with a non-refundable cleaning fee of ₹3,000.</p>
             <Button variant="outline" size="sm" className="mt-2">
               Edit policies

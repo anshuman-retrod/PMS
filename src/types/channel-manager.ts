@@ -14,7 +14,13 @@ export type SuChannel = (typeof SU_CHANNELS)[number];
 export type ConnectionStatus = "Connected" | "Disconnected" | "Error" | "Syncing";
 export type MappingStatus = "Mapped" | "Mismatch" | "Unmapped" | "Pending";
 export type SyncStatus = "Success" | "Warning" | "Error" | "In Progress";
-export type SyncType = "Inventory" | "Rates" | "Reservations" | "Content" | "Images" | "Restrictions";
+export type SyncType =
+  | "Inventory"
+  | "Rates"
+  | "Reservations"
+  | "Content"
+  | "Images"
+  | "Restrictions";
 
 export interface SuConnection {
   channel: SuChannel;

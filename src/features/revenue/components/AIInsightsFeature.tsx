@@ -38,7 +38,7 @@ const insights = [
 ];
 
 const heat = Array.from({ length: 30 }, (_, i) =>
-  Math.round(40 + Math.sin(i / 3) * 30 + (i % 7 === 5 ? 20 : 0))
+  Math.round(40 + Math.sin(i / 3) * 30 + (i % 7 === 5 ? 20 : 0)),
 );
 
 const categories: InsightCategory[] = ["All", "Pricing", "Operations", "Guest", "Risk"];
@@ -76,7 +76,9 @@ export function AIInsightsFeature() {
                 type="button"
                 onClick={() => setCategory(c)}
                 className={`rounded px-3 py-1 transition ${
-                  category === c ? "bg-foreground text-background" : "text-text-secondary hover:text-text-primary"
+                  category === c
+                    ? "bg-foreground text-background"
+                    : "text-text-secondary hover:text-text-primary"
                 }`}
               >
                 {c}

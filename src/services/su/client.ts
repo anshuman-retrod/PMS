@@ -54,7 +54,10 @@ const delay = (ms = 120) => new Promise((r) => setTimeout(r, ms));
 function wrap<T>(data: T): SuApiResponse<T> {
   return {
     data,
-    meta: { source: import.meta.env.VITE_SU_API_URL ? "su-api" : "mock", syncedAt: new Date().toISOString() },
+    meta: {
+      source: import.meta.env.VITE_SU_API_URL ? "su-api" : "mock",
+      syncedAt: new Date().toISOString(),
+    },
   };
 }
 
@@ -216,9 +219,14 @@ export class SuChannelManagerClient {
     }
   }
 
-  async triggerSync(body: SuSyncRequest): Promise<SuApiResponse<{ jobId: string; status: string }>> {
+  async triggerSync(
+    body: SuSyncRequest,
+  ): Promise<SuApiResponse<{ jobId: string; status: string }>> {
     try {
-      return await this.request("/v1/channel-manager/sync", { method: "POST", body: JSON.stringify(body) });
+      return await this.request("/v1/channel-manager/sync", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
     } catch {
       await delay(300);
       return wrap({ jobId: `JOB-${Date.now()}`, status: "queued" });

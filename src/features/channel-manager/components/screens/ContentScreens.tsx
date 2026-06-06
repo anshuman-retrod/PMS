@@ -40,27 +40,48 @@ export function PropertyContentScreen() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <KpiCard label="Content fields" value={String(data.length)} accent="brand" />
             <KpiCard label="Synced channels" value={String(SU_CHANNELS.length)} accent="success" />
-            <KpiCard label="Errors" value={String(data.filter((f) => Object.values(f.channels).some((c) => c?.status === "Error")).length)} accent="error" />
+            <KpiCard
+              label="Errors"
+              value={String(
+                data.filter((f) => Object.values(f.channels).some((c) => c?.status === "Error"))
+                  .length,
+              )}
+              accent="error"
+            />
           </div>
 
           <Card>
             <CardHeader title="Property content fields" hint="PMS master → OTA distribution" />
-            <div className="overflow-x-auto">
+            <div className="table-scroll-shadow overflow-x-auto">
               <table className="w-full min-w-[900px] text-[13px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
-                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">Field</th>
-                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">PMS value</th>
+                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      Field
+                    </th>
+                    <th className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      PMS value
+                    </th>
                     {SU_CHANNELS.slice(0, 4).map((ch) => (
-                      <th key={ch} className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">{ch}</th>
+                      <th
+                        key={ch}
+                        className="px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
+                        {ch}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((row) => (
-                    <tr key={row.field} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={row.field}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-3 font-medium">{row.field}</td>
-                      <td className="max-w-[200px] truncate px-4 py-3 text-text-secondary">{row.pmsValue}</td>
+                      <td className="max-w-[200px] truncate px-4 py-3 text-text-secondary">
+                        {row.pmsValue}
+                      </td>
                       {SU_CHANNELS.slice(0, 4).map((ch) => {
                         const c = row.channels[ch];
                         return (
@@ -68,7 +89,9 @@ export function PropertyContentScreen() {
                             {c ? (
                               <>
                                 <StatusBadge tone={mapTone(c.status)}>{c.status}</StatusBadge>
-                                <p className="mt-1 max-w-[120px] truncate text-[11px] text-text-secondary">{c.value}</p>
+                                <p className="mt-1 max-w-[120px] truncate text-[11px] text-text-secondary">
+                                  {c.value}
+                                </p>
                               </>
                             ) : (
                               <span className="text-text-disabled">—</span>
@@ -109,8 +132,16 @@ export function RoomContentScreen() {
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <KpiCard label="Room types" value={String(data.length)} accent="brand" />
-            <KpiCard label="Synced" value={String(data.filter((r) => r.syncStatus === "Synced").length)} accent="success" />
-            <KpiCard label="Warnings" value={String(data.filter((r) => r.syncStatus === "Warning").length)} accent="warning" />
+            <KpiCard
+              label="Synced"
+              value={String(data.filter((r) => r.syncStatus === "Synced").length)}
+              accent="success"
+            />
+            <KpiCard
+              label="Warnings"
+              value={String(data.filter((r) => r.syncStatus === "Warning").length)}
+              accent="warning"
+            />
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -125,7 +156,10 @@ export function RoomContentScreen() {
                 </p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {room.amenities.map((a) => (
-                    <span key={a} className="rounded-sm bg-surface-2 px-2 py-0.5 text-[11px] text-text-secondary">
+                    <span
+                      key={a}
+                      className="rounded-sm bg-surface-2 px-2 py-0.5 text-[11px] text-text-secondary"
+                    >
                       {a}
                     </span>
                   ))}
@@ -146,9 +180,9 @@ export function ImageManagementScreen() {
   const { data, loading, error, reload } = useSuData(() => suClient.getImages());
   const [channel, setChannel] = useState<SuChannel | "All">("All");
 
-  const pending = data?.filter((img) =>
-    Object.values(img.channels).some((s) => s === "Pending" || s === "Error"),
-  ).length ?? 0;
+  const pending =
+    data?.filter((img) => Object.values(img.channels).some((s) => s === "Pending" || s === "Error"))
+      .length ?? 0;
 
   return (
     <ChannelManagerShell
@@ -168,15 +202,26 @@ export function ImageManagementScreen() {
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <KpiCard label="Total images" value={String(data.length)} accent="brand" />
-            <KpiCard label="Primary images" value={String(data.filter((i) => i.primary).length)} accent="info" />
+            <KpiCard
+              label="Primary images"
+              value={String(data.filter((i) => i.primary).length)}
+              accent="info"
+            />
             <KpiCard label="Pending / errors" value={String(pending)} accent="warning" />
-            <KpiCard label="Room types" value={String(new Set(data.map((i) => i.roomType)).size)} accent="success" />
+            <KpiCard
+              label="Room types"
+              value={String(new Set(data.map((i) => i.roomType)).size)}
+              accent="success"
+            />
           </div>
 
           <ChannelFilterToolbar
             channel={channel}
             onChannel={setChannel}
-            onSync={async () => { await suClient.triggerSync({ types: ["Images"] }); reload(); }}
+            onSync={async () => {
+              await suClient.triggerSync({ types: ["Images"] });
+              reload();
+            }}
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -197,7 +242,9 @@ export function ImageManagementScreen() {
                     {Object.entries(img.channels)
                       .filter(([ch]) => channel === "All" || ch === channel)
                       .map(([ch, status]) => (
-                        <StatusBadge key={ch} tone={mapTone(status)}>{ch.split(".")[0]}</StatusBadge>
+                        <StatusBadge key={ch} tone={mapTone(status)}>
+                          {ch.split(".")[0]}
+                        </StatusBadge>
                       ))}
                   </div>
                   <Button variant="outline" size="sm" className="mt-3 w-full">

@@ -19,9 +19,16 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function PoliciesStep({ state, setState, disabled }: PoliciesStepProps) {
-  const set = (patch: Partial<OnboardingState["policies"]>) =>
-    setState((s) => ({ ...s, policies: { ...s.policies, ...patch } }));
-  const p = state.policies;
+  const setReservationSettings = (patch: Partial<OnboardingState["reservationSettings"]>) =>
+    setState((s) => ({
+      ...s,
+      reservationSettings: { ...s.reservationSettings, ...patch },
+    }));
+  const setBookingEngine = (patch: Partial<OnboardingState["bookingEngine"]>) =>
+    setState((s) => ({ ...s, bookingEngine: { ...s.bookingEngine, ...patch } }));
+  const setCRM = (patch: Partial<OnboardingState["crm"]>) =>
+    setState((s) => ({ ...s, crm: { ...s.crm, ...patch } }));
+  const p = state.reservationSettings;
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -31,7 +38,7 @@ export function PoliciesStep({ state, setState, disabled }: PoliciesStepProps) {
           type="time"
           className={inputCls}
           value={p.checkIn}
-          onChange={(e) => set({ checkIn: e.target.value })}
+          onChange={(e) => setReservationSettings({ checkIn: e.target.value })}
         />
       </Field>
       <Field label="Standard check-out time">
@@ -40,31 +47,47 @@ export function PoliciesStep({ state, setState, disabled }: PoliciesStepProps) {
           type="time"
           className={inputCls}
           value={p.checkOut}
-          onChange={(e) => set({ checkOut: e.target.value })}
+          onChange={(e) => setReservationSettings({ checkOut: e.target.value })}
         />
       </Field>
       <Field label="Cancellation policy">
         <textarea
           disabled={disabled}
           className={`${inputCls} h-20 py-2`}
-          value={p.cancellation}
-          onChange={(e) => set({ cancellation: e.target.value })}
+          value={p.cancellationPolicy}
+          onChange={(e) => setReservationSettings({ cancellationPolicy: e.target.value })}
         />
       </Field>
       <Field label="No-show policy">
         <textarea
           disabled={disabled}
           className={`${inputCls} h-20 py-2`}
-          value={p.noShow}
-          onChange={(e) => set({ noShow: e.target.value })}
+          value={p.noShowPolicy}
+          onChange={(e) => setReservationSettings({ noShowPolicy: e.target.value })}
         />
       </Field>
-      <Field label="Minor / accompanying guest policy">
+      <Field label="Booking engine cancellation rules">
         <textarea
           disabled={disabled}
           className={`${inputCls} h-20 py-2`}
-          value={p.minorPolicy}
-          onChange={(e) => set({ minorPolicy: e.target.value })}
+          value={state.bookingEngine.cancellationRules}
+          onChange={(e) => setBookingEngine({ cancellationRules: e.target.value })}
+        />
+      </Field>
+      <Field label="Required ID documents (comma-separated)">
+        <input
+          disabled={disabled}
+          className={inputCls}
+          value={p.idRequired.join(", ")}
+          onChange={(e) =>
+            setReservationSettings({
+              idRequired: e.target.value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            })
+          }
+          placeholder="Passport, Government ID"
         />
       </Field>
       <div className="flex items-end gap-6">
@@ -72,19 +95,19 @@ export function PoliciesStep({ state, setState, disabled }: PoliciesStepProps) {
           <input
             disabled={disabled}
             type="checkbox"
-            checked={p.earlyCheckIn}
-            onChange={(e) => set({ earlyCheckIn: e.target.checked })}
+            checked={state.crm.loyaltyConfigured}
+            onChange={(e) => setCRM({ loyaltyConfigured: e.target.checked })}
           />
-          Allow early check-in (subject to availability)
+          Loyalty program configured
         </label>
         <label className="flex items-center gap-2 text-[13px] text-text-primary">
           <input
             disabled={disabled}
             type="checkbox"
-            checked={p.lateCheckOut}
-            onChange={(e) => set({ lateCheckOut: e.target.checked })}
+            checked={state.crm.smsTemplatesConfigured}
+            onChange={(e) => setCRM({ smsTemplatesConfigured: e.target.checked })}
           />
-          Allow late check-out
+          SMS templates configured
         </label>
       </div>
     </div>

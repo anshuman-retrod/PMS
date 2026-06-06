@@ -8,7 +8,10 @@ export function DepositView() {
         <thead className="bg-surface-2/40 text-left">
           <tr className="border-b border-border bg-surface-2/40 text-left">
             {["Reservation", "Guest", "Collected", "Applied", "Outstanding", "Status"].map((h) => (
-              <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+              <th
+                key={h}
+                className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+              >
                 {h}
               </th>
             ))}
@@ -26,10 +29,16 @@ export function DepositView() {
               <td className="px-4 py-3 font-mono">₹{r.c.toLocaleString()}</td>
               <td className="px-4 py-3 font-mono text-text-secondary">₹{r.a.toLocaleString()}</td>
               <td className="px-4 py-3 font-mono">
-                {r.o ? <span className="text-[var(--color-warning)]">₹{r.o.toLocaleString()}</span> : "—"}
+                {r.o ? (
+                  <span className="text-[var(--color-warning)]">₹{r.o.toLocaleString()}</span>
+                ) : (
+                  "—"
+                )}
               </td>
               <td className="px-4 py-3">
-                <StatusBadge tone={r.s === "Applied" ? "success" : r.s === "Held" ? "info" : "error"}>
+                <StatusBadge
+                  tone={r.s === "Applied" ? "success" : r.s === "Held" ? "info" : "error"}
+                >
                   {r.s}
                 </StatusBadge>
               </td>

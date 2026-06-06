@@ -1,4 +1,7 @@
 import { Card, CardHeader, StatusBadge, Button } from "@/components/ui/Primitives";
+import type { ComponentProps } from "react";
+
+type BadgeTone = ComponentProps<typeof StatusBadge>["tone"];
 
 export function OOOManagement() {
   return (
@@ -12,7 +15,10 @@ export function OOOManagement() {
         <thead className="bg-surface-2/40 text-left">
           <tr className="border-b border-border bg-surface-2/40 text-left">
             {["Room", "Type", "Reason", "From", "Until", "Work order", "Status"].map((h) => (
-              <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+              <th
+                key={h}
+                className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+              >
                 {h}
               </th>
             ))}
@@ -20,9 +26,36 @@ export function OOOManagement() {
         </thead>
         <tbody>
           {[
-            { r: "207", t: "Deluxe King", reason: "HVAC failure", f: "14 May", u: "16 May", wo: "WO-1102", s: "In progress", tone: "warning" },
-            { r: "105", t: "Executive", reason: "Carpet replacement", f: "12 May", u: "20 May", wo: "WO-1098", s: "Scheduled", tone: "info" },
-            { r: "318", t: "Premier Suite", reason: "Renovation", f: "01 Apr", u: "30 Jun", wo: "WO-1042", s: "Long-term", tone: "neutral" },
+            {
+              r: "207",
+              t: "Deluxe King",
+              reason: "HVAC failure",
+              f: "14 May",
+              u: "16 May",
+              wo: "WO-1102",
+              s: "In progress",
+              tone: "warning",
+            },
+            {
+              r: "105",
+              t: "Executive",
+              reason: "Carpet replacement",
+              f: "12 May",
+              u: "20 May",
+              wo: "WO-1098",
+              s: "Scheduled",
+              tone: "info",
+            },
+            {
+              r: "318",
+              t: "Premier Suite",
+              reason: "Renovation",
+              f: "01 Apr",
+              u: "30 Jun",
+              wo: "WO-1042",
+              s: "Long-term",
+              tone: "neutral",
+            },
           ].map((x, i) => (
             <tr key={i} className="border-t border-border-subtle">
               <td className="px-4 py-3 font-mono font-semibold text-text-primary">{x.r}</td>
@@ -32,7 +65,7 @@ export function OOOManagement() {
               <td className="px-4 py-3 text-text-secondary">{x.u}</td>
               <td className="px-4 py-3 font-mono text-text-secondary">{x.wo}</td>
               <td className="px-4 py-3">
-                <StatusBadge tone={x.tone as any}>{x.s}</StatusBadge>
+                <StatusBadge tone={x.tone as BadgeTone}>{x.s}</StatusBadge>
               </td>
             </tr>
           ))}

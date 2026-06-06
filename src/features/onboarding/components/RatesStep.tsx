@@ -20,15 +20,102 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function RatesStep({ state, setState, disabled }: RatesStepProps) {
-  const setTax = (patch: Partial<OnboardingState["rates"]["tax"]>) =>
-    setState((s) => ({ ...s, rates: { ...s.rates, tax: { ...s.rates.tax, ...patch } } }));
+  const setTax = (patch: Partial<OnboardingState["tax"]>) =>
+    setState((s) => ({ ...s, tax: { ...s.tax, ...patch } }));
+  const setRatePlans = (updater: (prev: OnboardingState["ratePlans"]) => OnboardingState["ratePlans"]) =>
+    setState((s) => ({ ...s, ratePlans: updater(s.ratePlans) }));
+  const setMealPlans = (updater: (prev: OnboardingState["mealPlans"]) => OnboardingState["mealPlans"]) =>
+    setState((s) => ({ ...s, mealPlans: updater(s.mealPlans) }));
 
   return (
     <div className="space-y-6">
       <div>
+        <div className="label-uppercase mb-2">Meal plans</div>
+        <div className="space-y-2">
+          {state.mealPlans.map((meal) => (
+            <div
+              key={meal.id}
+              className="grid grid-cols-1 gap-2 rounded-md border border-border bg-surface-2/30 px-3 py-2 md:grid-cols-[90px_1fr_140px_140px_auto]"
+            >
+              <input
+                disabled={disabled}
+                className={inputCls}
+                value={meal.code}
+                onChange={(e) =>
+                  setMealPlans((prev) =>
+                    prev.map((item) =>
+                      item.id === meal.id
+                        ? {
+                            ...item,
+                            code: e.target.value as OnboardingState["mealPlans"][number]["code"],
+                          }
+                        : item,
+                    ),
+                  )
+                }
+              />
+              <input
+                disabled={disabled}
+                className={inputCls}
+                value={meal.name}
+                onChange={(e) =>
+                  setMealPlans((prev) =>
+                    prev.map((item) =>
+                      item.id === meal.id ? { ...item, name: e.target.value } : item,
+                    ),
+                  )
+                }
+              />
+              <input
+                disabled={disabled}
+                className={inputCls}
+                value={meal.includedMeals}
+                onChange={(e) =>
+                  setMealPlans((prev) =>
+                    prev.map((item) =>
+                      item.id === meal.id ? { ...item, includedMeals: e.target.value } : item,
+                    ),
+                  )
+                }
+              />
+              <input
+                disabled={disabled}
+                type="number"
+                className={inputCls}
+                value={meal.priceAdjustment}
+                onChange={(e) =>
+                  setMealPlans((prev) =>
+                    prev.map((item) =>
+                      item.id === meal.id
+                        ? { ...item, priceAdjustment: Number(e.target.value) }
+                        : item,
+                    ),
+                  )
+                }
+              />
+              <label className="flex items-center gap-2 text-[12px] text-text-primary">
+                <input
+                  disabled={disabled}
+                  type="checkbox"
+                  checked={meal.active}
+                  onChange={(e) =>
+                    setMealPlans((prev) =>
+                      prev.map((item) =>
+                        item.id === meal.id ? { ...item, active: e.target.checked } : item,
+                      ),
+                    )
+                  }
+                />
+                Active
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
         <div className="label-uppercase mb-2">Rate plans</div>
         <div className="space-y-2">
-          {state.rates.plans.map((p) => (
+          {state.ratePlans.map((p) => (
             <div
               key={p.id}
               className="flex items-center justify-between rounded-md border border-border bg-surface-2/30 px-3 py-2"
@@ -36,10 +123,27 @@ export function RatesStep({ state, setState, disabled }: RatesStepProps) {
               <div>
                 <div className="text-[13px] font-medium text-text-primary">{p.name}</div>
                 <div className="text-[11px] text-text-secondary">
-                  {p.type} · Adjustment {p.adjustment}
+                  {p.category.replaceAll("_", " ")} · Discount {p.discountPercent}%
                 </div>
               </div>
-              <StatusBadge tone="brand">Active</StatusBadge>
+              <label className="flex items-center gap-2 text-[12px] text-text-primary">
+                <input
+                  disabled={disabled}
+                  type="checkbox"
+                  checked={p.active}
+                  onChange={(e) =>
+                    setRatePlans((prev) =>
+                      prev.map((item) =>
+                        item.id === p.id ? { ...item, active: e.target.checked } : item,
+                      ),
+                    )
+                  }
+                />
+                Active
+              </label>
+              <StatusBadge tone={p.active ? "success" : "neutral"}>
+                {p.active ? "Active" : "Inactive"}
+              </StatusBadge>
             </div>
           ))}
         </div>
@@ -52,26 +156,26 @@ export function RatesStep({ state, setState, disabled }: RatesStepProps) {
               disabled={disabled}
               type="number"
               className={inputCls}
-              value={state.rates.tax.cgst}
-              onChange={(e) => setTax({ cgst: Number(e.target.value) })}
+              value={state.tax.gst}
+              onChange={(e) => setTax({ gst: Number(e.target.value) })}
             />
           </Field>
-          <Field label="SGST %">
+          <Field label="VAT %">
             <input
               disabled={disabled}
               type="number"
               className={inputCls}
-              value={state.rates.tax.sgst}
-              onChange={(e) => setTax({ sgst: Number(e.target.value) })}
+              value={state.tax.vat}
+              onChange={(e) => setTax({ vat: Number(e.target.value) })}
             />
           </Field>
-          <Field label="IGST %">
+          <Field label="City tax %">
             <input
               disabled={disabled}
               type="number"
               className={inputCls}
-              value={state.rates.tax.igst}
-              onChange={(e) => setTax({ igst: Number(e.target.value) })}
+              value={state.tax.cityTax}
+              onChange={(e) => setTax({ cityTax: Number(e.target.value) })}
             />
           </Field>
           <Field label="Service charge %">
@@ -79,26 +183,17 @@ export function RatesStep({ state, setState, disabled }: RatesStepProps) {
               disabled={disabled}
               type="number"
               className={inputCls}
-              value={state.rates.tax.serviceCharge}
+              value={state.tax.serviceCharge}
               onChange={(e) => setTax({ serviceCharge: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Lower slab applies under (₹)">
+          <Field label="Luxury tax %">
             <input
               disabled={disabled}
               type="number"
               className={inputCls}
-              value={state.rates.tax.lowerSlabUnder}
-              onChange={(e) => setTax({ lowerSlabUnder: Number(e.target.value) })}
-            />
-          </Field>
-          <Field label="Lower slab GST %">
-            <input
-              disabled={disabled}
-              type="number"
-              className={inputCls}
-              value={state.rates.tax.lowerSlabRate}
-              onChange={(e) => setTax({ lowerSlabRate: Number(e.target.value) })}
+              value={state.tax.luxuryTax}
+              onChange={(e) => setTax({ luxuryTax: Number(e.target.value) })}
             />
           </Field>
         </div>

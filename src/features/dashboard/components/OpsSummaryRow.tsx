@@ -1,9 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { Wrench, ListTodo, MessageSquare, ArrowUpRight } from "lucide-react";
 import { Card, CardHeader, StatusBadge } from "@/components/ui/Primitives";
-import { workOrders, opsTasks, guestServiceRequests } from "@/services/mock/db";
+import {
+  useWorkOrdersQuery,
+  useOpsTasksQuery,
+  useGuestServiceRequestsQuery,
+} from "@/services/mock/queries";
 
 export function OpsSummaryRow() {
+  const { data: workOrders = [] } = useWorkOrdersQuery();
+  const { data: opsTasks = [] } = useOpsTasksQuery();
+  const { data: guestServiceRequests = [] } = useGuestServiceRequestsQuery();
+
   const openWo = workOrders.filter((w) => w.status !== "Resolved");
   const openTasks = opsTasks.filter((t) => t.status !== "Done");
   const openRequests = guestServiceRequests.filter((r) => r.status !== "Done");
@@ -17,35 +25,53 @@ export function OpsSummaryRow() {
         icon={Wrench}
       >
         {openWo.slice(0, 3).map((w) => (
-          <li key={w.id} className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0">
+          <li
+            key={w.id}
+            className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0"
+          >
             <div className="min-w-0">
               <div className="truncate text-[13px] font-medium text-text-primary">
                 Room {w.room} · {w.title}
               </div>
               <div className="text-[11px] text-text-secondary">{w.id}</div>
             </div>
-            <StatusBadge tone={w.priority === "Critical" ? "error" : "warning"}>{w.priority}</StatusBadge>
+            <StatusBadge tone={w.priority === "Critical" ? "error" : "warning"}>
+              {w.priority}
+            </StatusBadge>
           </li>
         ))}
       </OpsCard>
 
       <OpsCard title="Tasks" hint={`${openTasks.length} open`} to="/tasks" icon={ListTodo}>
         {openTasks.map((t) => (
-          <li key={t.id} className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0">
+          <li
+            key={t.id}
+            className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0"
+          >
             <div className="min-w-0">
               <div className="truncate text-[13px] font-medium text-text-primary">{t.title}</div>
               <div className="text-[11px] text-text-secondary">
                 {t.department} · Due {t.due}
               </div>
             </div>
-            <StatusBadge tone={t.priority === "High" ? "warning" : "neutral"}>{t.status}</StatusBadge>
+            <StatusBadge tone={t.priority === "High" ? "warning" : "neutral"}>
+              {t.status}
+            </StatusBadge>
           </li>
         ))}
       </OpsCard>
 
-      <OpsCard title="Guest requests" hint={`${openRequests.length} active`} to="/guest-requests" icon={MessageSquare}>
+      <OpsCard
+        title="Guest requests"
+        hint={`${openRequests.length} active`}
+        to="/guest-requests"
+        icon={MessageSquare}
+      >
         {openRequests.map((r) => (
-          <li key={r.id} className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0">
+          <li
+            key={r.id}
+            className="flex items-center justify-between gap-2 border-b border-border-subtle py-2.5 last:border-0"
+          >
             <div className="min-w-0">
               <div className="truncate text-[13px] font-medium text-text-primary">
                 {r.room} · {r.type}
@@ -79,7 +105,10 @@ function OpsCard({
         title={title}
         hint={hint}
         action={
-          <Link to={to} className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary-pressed">
+          <Link
+            to={to}
+            className="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary-pressed"
+          >
             View all <ArrowUpRight className="h-3 w-3" />
           </Link>
         }

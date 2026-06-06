@@ -1,5 +1,8 @@
 import { BellRing, MessageSquare, Package } from "lucide-react";
 import { Card, CardHeader, StatusBadge, Button } from "@/components/ui/Primitives";
+import type { ComponentProps } from "react";
+
+type BadgeTone = ComponentProps<typeof StatusBadge>["tone"];
 
 export function GuestServices() {
   return (
@@ -16,7 +19,11 @@ export function GuestServices() {
         <ul className="divide-y divide-border-subtle">
           {[
             { icon: BellRing, t: "06:30 wake-up · Room 204", s: "Scheduled" },
-            { icon: MessageSquare, t: "Message for Tanaka · 'Driver arrived at 09:00'", s: "Delivered" },
+            {
+              icon: MessageSquare,
+              t: "Message for Tanaka · 'Driver arrived at 09:00'",
+              s: "Delivered",
+            },
             { icon: BellRing, t: "05:45 wake-up · Room 312", s: "Scheduled" },
           ].map((m, i) => (
             <li key={i} className="flex items-center gap-3 px-5 py-3">
@@ -45,7 +52,7 @@ export function GuestServices() {
             <li key={i} className="px-5 py-3">
               <div className="flex items-center justify-between">
                 <div className="text-[12px] font-medium text-text-primary">{r.c}</div>
-                <StatusBadge tone={r.tone as any}>{r.s}</StatusBadge>
+                <StatusBadge tone={r.tone as BadgeTone}>{r.s}</StatusBadge>
               </div>
               <div className="mt-0.5 text-[11px] text-text-secondary">{r.t}</div>
             </li>
@@ -63,9 +70,27 @@ export function GuestServices() {
         />
         <ul className="divide-y divide-border-subtle">
           {[
-            { i: Package, item: "Black Ray-Ban sunglasses", loc: "Room 204 · housekeeping", s: "Found", tone: "info" },
-            { i: Package, item: "iPhone 15 charger", loc: "Lobby table 3", s: "Claimed", tone: "success" },
-            { i: Package, item: "Silk scarf · cream", loc: "Pool deck", s: "Donated", tone: "neutral" },
+            {
+              i: Package,
+              item: "Black Ray-Ban sunglasses",
+              loc: "Room 204 · housekeeping",
+              s: "Found",
+              tone: "info",
+            },
+            {
+              i: Package,
+              item: "iPhone 15 charger",
+              loc: "Lobby table 3",
+              s: "Claimed",
+              tone: "success",
+            },
+            {
+              i: Package,
+              item: "Silk scarf · cream",
+              loc: "Pool deck",
+              s: "Donated",
+              tone: "neutral",
+            },
           ].map((x, i) => (
             <li key={i} className="flex items-center gap-3 px-5 py-3">
               <x.i className="h-4 w-4 text-text-secondary" />
@@ -73,7 +98,7 @@ export function GuestServices() {
                 <div className="text-[12px] font-medium text-text-primary">{x.item}</div>
                 <div className="text-[11px] text-text-secondary">{x.loc}</div>
               </div>
-              <StatusBadge tone={x.tone as any}>{x.s}</StatusBadge>
+              <StatusBadge tone={x.tone as BadgeTone}>{x.s}</StatusBadge>
             </li>
           ))}
         </ul>

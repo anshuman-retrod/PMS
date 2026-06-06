@@ -1,6 +1,6 @@
 import { Download, FileText } from "lucide-react";
 import { PageHeader, KpiCard, Button } from "@/components/ui/Primitives";
-import { revenueTrend, otaBreakdown } from "@/services/mock/db";
+import { useRevenueTrendQuery, useOtaBreakdownQuery } from "@/services/mock/queries";
 import { RevenueTrendChart } from "@/features/reports/components/RevenueTrendChart";
 import { OtaRevenueChart } from "@/features/reports/components/OtaRevenueChart";
 
@@ -12,6 +12,9 @@ const tooltipStyle = {
 };
 
 export function ExecutiveAnalyticsFeature() {
+  const { data: revenueTrend = [] } = useRevenueTrendQuery();
+  const { data: otaBreakdown = [] } = useOtaBreakdownQuery();
+
   return (
     <div>
       <PageHeader
@@ -32,9 +35,14 @@ export function ExecutiveAnalyticsFeature() {
         }
       />
 
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          <KpiCard label="Revenue · MTD" value="₹1.42 Cr" delta="↑ 12.4% vs budget" accent="brand" />
+      <div className="responsive-page-x space-y-5 py-4 sm:space-y-6 sm:py-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <KpiCard
+            label="Revenue · MTD"
+            value="₹1.42 Cr"
+            delta="↑ 12.4% vs budget"
+            accent="brand"
+          />
           <KpiCard label="GOPPAR" value="₹6,840" delta="↑ 4.1%" accent="success" />
           <KpiCard label="Occupancy" value="78.4%" delta="↑ 2.1 pts" accent="info" />
           <KpiCard label="ADR" value="₹11,820" accent="success" />
@@ -48,7 +56,9 @@ export function ExecutiveAnalyticsFeature() {
           <OtaRevenueChart otaBreakdown={otaBreakdown} tooltipStyle={tooltipStyle} />
           <div className="rounded-lg border border-border bg-surface p-5 shadow-e1">
             <h3 className="text-[14px] font-semibold text-text-primary">Budget vs actual · May</h3>
-            <p className="mt-1 text-[12px] text-text-secondary">Rooms revenue tracking 6.2% above budget YTD.</p>
+            <p className="mt-1 text-[12px] text-text-secondary">
+              Rooms revenue tracking 6.2% above budget YTD.
+            </p>
             <div className="mt-4 space-y-3">
               {[
                 { label: "Rooms", pct: 106 },

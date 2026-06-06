@@ -1,6 +1,6 @@
 import { Filter, Download, Sparkles, ArrowUpRight } from "lucide-react";
 import { PageHeader, KpiCard, Button } from "@/components/ui/Primitives";
-import { occupancyByType } from "@/services/mock/db";
+import { useOccupancyByTypeQuery } from "@/services/mock/queries";
 import { LiveOccupancy } from "./LiveOccupancy";
 import { RevenueKpis } from "./RevenueKpis";
 import { ArrivalsDepartures } from "./ArrivalsDepartures";
@@ -29,6 +29,8 @@ const fmtINR = (n: number) =>
         : `₹${n}`;
 
 export function DashboardFeature() {
+  const { data: occupancyByType = [] } = useOccupancyByTypeQuery();
+
   const totalRooms = occupancyByType.reduce((a, b) => a + b.total, 0);
   const occupied = occupancyByType.reduce((a, b) => a + b.occupied, 0);
   const occPct = Math.round((occupied / totalRooms) * 1000) / 10;
@@ -62,8 +64,20 @@ export function DashboardFeature() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <KpiCard label="ADR Today" value="₹12,400" delta="↑ ₹800 vs LW" accent="brand" />
           <KpiCard label="RevPAR · MTD" value="₹10,440" delta="↑ 5.4% vs LM" accent="success" />
-          <KpiCard label="In-House Guests" value="84" delta="6 VIPs" deltaTone="neutral" accent="info" />
-          <KpiCard label="Open Work Orders" value="11" delta="2 critical" deltaTone="error" accent="warning" />
+          <KpiCard
+            label="In-House Guests"
+            value="84"
+            delta="6 VIPs"
+            deltaTone="neutral"
+            accent="info"
+          />
+          <KpiCard
+            label="Open Work Orders"
+            value="11"
+            delta="2 critical"
+            deltaTone="error"
+            accent="warning"
+          />
         </div>
 
         {/* === Row 2: Arrivals/Departures + Alerts === */}
@@ -91,7 +105,8 @@ export function DashboardFeature() {
                 <Sparkles className="h-3 w-3" /> Retrod AI
               </div>
               <p className="text-[13px] leading-snug text-text-primary">
-                Weekend forecast hits <strong>91% occupancy</strong>. Consider 12–18% rate uplift on Deluxe rooms.
+                Weekend forecast hits <strong>91% occupancy</strong>. Consider 12–18% rate uplift on
+                Deluxe rooms.
               </p>
               <button className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary-pressed">
                 Apply suggestion <ArrowUpRight className="h-3 w-3" />

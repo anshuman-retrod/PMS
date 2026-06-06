@@ -15,10 +15,10 @@ export function RoomGrid({ floors, sample, colorFor }: RoomGridProps) {
         title="Assign room"
         hint="Floor 2 · Deluxe King available"
         action={
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-disabled" />
             <input
-              className="h-8 w-44 rounded-md border border-border bg-surface pl-8 pr-2 text-[12px]"
+              className="h-8 w-full rounded-md border border-border bg-surface pl-8 pr-2 text-[12px] sm:w-44"
               placeholder="Search room…"
             />
           </div>
@@ -33,11 +33,13 @@ export function RoomGrid({ floors, sample, colorFor }: RoomGridProps) {
                 <button
                   key={r.num}
                   className={`group relative aspect-[3/2.4] rounded-md border text-left transition hover:scale-[1.03] hover:shadow-e2 ${colorFor(
-                    r.status
+                    r.status,
                   )}`}
                   title={`${r.num} · ${r.status}`}
                 >
-                  <span className="absolute left-1.5 top-1 font-mono text-[11px] font-medium">{r.num}</span>
+                  <span className="absolute left-1.5 top-1 font-mono text-[11px] font-medium">
+                    {r.num}
+                  </span>
                   <span className="absolute bottom-1 right-1.5 h-1.5 w-1.5 rounded-full bg-current opacity-80" />
                 </button>
               ))}

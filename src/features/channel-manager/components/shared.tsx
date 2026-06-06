@@ -41,7 +41,10 @@ export function LoadingBlock() {
   return (
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="h-16 animate-pulse rounded-lg border border-border bg-surface-2/60" />
+        <div
+          key={i}
+          className="h-16 animate-pulse rounded-lg border border-border bg-surface-2/60"
+        />
       ))}
     </div>
   );
@@ -53,7 +56,11 @@ export function ErrorBlock({ message, onRetry }: { message: string; onRetry?: ()
       <p className="font-medium text-text-primary">Sync error</p>
       <p className="mt-1 text-text-secondary">{message}</p>
       {onRetry && (
-        <button type="button" onClick={onRetry} className="mt-2 text-[12px] font-medium text-primary hover:underline">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-2 text-[12px] font-medium text-primary hover:underline"
+        >
           Retry
         </button>
       )}
@@ -62,11 +69,18 @@ export function ErrorBlock({ message, onRetry }: { message: string; onRetry?: ()
 }
 
 export function mapTone(s: string) {
-  if (s === "Mapped" || s === "Synced" || s === "Connected" || s === "Success") return "success" as const;
-  if (s === "Mismatch" || s === "Warning" || s === "Pending" || s === "Conflict" || s === "Drift") return "warning" as const;
-  if (s === "Unmapped" || s === "Error" || s === "Failed" || s === "Disconnected") return "error" as const;
+  if (s === "Mapped" || s === "Synced" || s === "Connected" || s === "Success")
+    return "success" as const;
+  if (s === "Mismatch" || s === "Warning" || s === "Pending" || s === "Conflict" || s === "Drift")
+    return "warning" as const;
+  if (s === "Unmapped" || s === "Error" || s === "Failed" || s === "Disconnected")
+    return "error" as const;
   return "neutral" as const;
 }
 
 export const fmtINR = (n: number) =>
-  n >= 100000 ? `₹${(n / 100000).toFixed(1)} L` : n >= 1000 ? `₹${(n / 1000).toFixed(1)}k` : `₹${n}`;
+  n >= 100000
+    ? `₹${(n / 100000).toFixed(1)} L`
+    : n >= 1000
+      ? `₹${(n / 1000).toFixed(1)}k`
+      : `₹${n}`;

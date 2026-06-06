@@ -9,28 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WebsiteBuilderRouteImport } from './routes/website-builder'
 import { Route as UsersRouteImport } from './routes/users'
 import { Route as TransportRouteImport } from './routes/transport'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as RolesRouteImport } from './routes/roles'
+import { Route as RevenueDrilldownRouteImport } from './routes/revenue-drilldown'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as ReservationsRouteImport } from './routes/reservations'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RegistrationCardsRouteImport } from './routes/registration-cards'
 import { Route as PropertyRouteImport } from './routes/property'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PmsIntegrationsRouteImport } from './routes/pms-integrations'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as OtaRouteImport } from './routes/ota'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MastersRouteImport } from './routes/masters'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as LostFoundRouteImport } from './routes/lost-found'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LeadsRouteImport } from './routes/leads'
 import { Route as HousekeepingRouteImport } from './routes/housekeeping'
+import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as GuestsRouteImport } from './routes/guests'
 import { Route as GuestRequestsRouteImport } from './routes/guest-requests'
 import { Route as GroupsRouteImport } from './routes/groups'
@@ -41,13 +51,17 @@ import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as CommunicationsRouteImport } from './routes/communications'
 import { Route as CheckInRouteImport } from './routes/check-in'
 import { Route as ChannelManagerRouteImport } from './routes/channel-manager'
+import { Route as BookingReadinessRouteImport } from './routes/booking-readiness'
 import { Route as BookingEngineRouteImport } from './routes/booking-engine'
 import { Route as BillingRouteImport } from './routes/billing'
 import { Route as AuditRouteImport } from './routes/audit'
+import { Route as AnomalyMonitorRouteImport } from './routes/anomaly-monitor'
 import { Route as AiInsightsRouteImport } from './routes/ai-insights'
 import { Route as AddOnsRouteImport } from './routes/add-ons'
+import { Route as ActivityTimelineRouteImport } from './routes/activity-timeline'
 import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RevenueAiDashboardRouteImport } from './routes/revenue.ai-dashboard'
 import { Route as ReservationsNewRouteImport } from './routes/reservations.new'
 import { Route as HousekeepingMobileRouteImport } from './routes/housekeeping.mobile'
 import { Route as DashboardMultiPropertyRouteImport } from './routes/dashboard.multi-property'
@@ -62,12 +76,18 @@ import { Route as ChannelManagerRatePlansRouteImport } from './routes/channel-ma
 import { Route as ChannelManagerPropertyContentRouteImport } from './routes/channel-manager.property-content'
 import { Route as ChannelManagerMultiPropertyRouteImport } from './routes/channel-manager.multi-property'
 import { Route as ChannelManagerInventoryRouteImport } from './routes/channel-manager.inventory'
+import { Route as ChannelManagerIncidentsRouteImport } from './routes/channel-manager.incidents'
 import { Route as ChannelManagerImagesRouteImport } from './routes/channel-manager.images'
 import { Route as ChannelManagerConnectionsRouteImport } from './routes/channel-manager.connections'
 import { Route as ChannelManagerAvailabilityRouteImport } from './routes/channel-manager.availability'
 import { Route as ChannelManagerAnalyticsRouteImport } from './routes/channel-manager.analytics'
 import { Route as AnalyticsExecutiveRouteImport } from './routes/analytics.executive'
 
+const WebsiteBuilderRoute = WebsiteBuilderRouteImport.update({
+  id: '/website-builder',
+  path: '/website-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UsersRoute = UsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -83,6 +103,11 @@ const TasksRoute = TasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StyleguideRoute = StyleguideRouteImport.update({
+  id: '/styleguide',
+  path: '/styleguide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StaffRoute = StaffRouteImport.update({
   id: '/staff',
   path: '/staff',
@@ -93,6 +118,16 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
@@ -101,6 +136,11 @@ const RoomsRoute = RoomsRouteImport.update({
 const RolesRoute = RolesRouteImport.update({
   id: '/roles',
   path: '/roles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevenueDrilldownRoute = RevenueDrilldownRouteImport.update({
+  id: '/revenue-drilldown',
+  path: '/revenue-drilldown',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RevenueRoute = RevenueRouteImport.update({
@@ -133,6 +173,11 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PmsIntegrationsRoute = PmsIntegrationsRouteImport.update({
+  id: '/pms-integrations',
+  path: '/pms-integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentsRoute = PaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -151,6 +196,16 @@ const OtaRoute = OtaRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MastersRoute = MastersRouteImport.update({
+  id: '/masters',
+  path: '/masters',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MaintenanceRoute = MaintenanceRouteImport.update({
@@ -173,9 +228,19 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeadsRoute = LeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HousekeepingRoute = HousekeepingRouteImport.update({
   id: '/housekeeping',
   path: '/housekeeping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HotelsRoute = HotelsRouteImport.update({
+  id: '/hotels',
+  path: '/hotels',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuestsRoute = GuestsRouteImport.update({
@@ -228,6 +293,11 @@ const ChannelManagerRoute = ChannelManagerRouteImport.update({
   path: '/channel-manager',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingReadinessRoute = BookingReadinessRouteImport.update({
+  id: '/booking-readiness',
+  path: '/booking-readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingEngineRoute = BookingEngineRouteImport.update({
   id: '/booking-engine',
   path: '/booking-engine',
@@ -243,6 +313,11 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnomalyMonitorRoute = AnomalyMonitorRouteImport.update({
+  id: '/anomaly-monitor',
+  path: '/anomaly-monitor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiInsightsRoute = AiInsightsRouteImport.update({
   id: '/ai-insights',
   path: '/ai-insights',
@@ -251,6 +326,11 @@ const AiInsightsRoute = AiInsightsRouteImport.update({
 const AddOnsRoute = AddOnsRouteImport.update({
   id: '/add-ons',
   path: '/add-ons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActivityTimelineRoute = ActivityTimelineRouteImport.update({
+  id: '/activity-timeline',
+  path: '/activity-timeline',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ActivitiesRoute = ActivitiesRouteImport.update({
@@ -262,6 +342,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const RevenueAiDashboardRoute = RevenueAiDashboardRouteImport.update({
+  id: '/ai-dashboard',
+  path: '/ai-dashboard',
+  getParentRoute: () => RevenueRoute,
 } as any)
 const ReservationsNewRoute = ReservationsNewRouteImport.update({
   id: '/new',
@@ -339,6 +424,11 @@ const ChannelManagerInventoryRoute = ChannelManagerInventoryRouteImport.update({
   path: '/inventory',
   getParentRoute: () => ChannelManagerRoute,
 } as any)
+const ChannelManagerIncidentsRoute = ChannelManagerIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => ChannelManagerRoute,
+} as any)
 const ChannelManagerImagesRoute = ChannelManagerImagesRouteImport.update({
   id: '/images',
   path: '/images',
@@ -370,11 +460,14 @@ const AnalyticsExecutiveRoute = AnalyticsExecutiveRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activities': typeof ActivitiesRoute
+  '/activity-timeline': typeof ActivityTimelineRoute
   '/add-ons': typeof AddOnsRoute
   '/ai-insights': typeof AiInsightsRoute
+  '/anomaly-monitor': typeof AnomalyMonitorRoute
   '/audit': typeof AuditRoute
   '/billing': typeof BillingRoute
   '/booking-engine': typeof BookingEngineRoute
+  '/booking-readiness': typeof BookingReadinessRoute
   '/channel-manager': typeof ChannelManagerRouteWithChildren
   '/check-in': typeof CheckInRoute
   '/communications': typeof CommunicationsRoute
@@ -385,33 +478,44 @@ export interface FileRoutesByFullPath {
   '/groups': typeof GroupsRoute
   '/guest-requests': typeof GuestRequestsRoute
   '/guests': typeof GuestsRoute
+  '/hotels': typeof HotelsRoute
   '/housekeeping': typeof HousekeepingRouteWithChildren
+  '/leads': typeof LeadsRoute
   '/login': typeof LoginRoute
   '/lost-found': typeof LostFoundRoute
   '/loyalty': typeof LoyaltyRoute
   '/maintenance': typeof MaintenanceRoute
+  '/masters': typeof MastersRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/ota': typeof OtaRoute
   '/packages': typeof PackagesRoute
   '/payments': typeof PaymentsRoute
+  '/pms-integrations': typeof PmsIntegrationsRoute
   '/pricing': typeof PricingRoute
   '/property': typeof PropertyRoute
   '/registration-cards': typeof RegistrationCardsRoute
   '/reports': typeof ReportsRoute
   '/reservations': typeof ReservationsRouteWithChildren
-  '/revenue': typeof RevenueRoute
+  '/revenue': typeof RevenueRouteWithChildren
+  '/revenue-drilldown': typeof RevenueDrilldownRoute
   '/roles': typeof RolesRoute
   '/rooms': typeof RoomsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
+  '/styleguide': typeof StyleguideRoute
   '/tasks': typeof TasksRoute
   '/transport': typeof TransportRoute
   '/users': typeof UsersRoute
+  '/website-builder': typeof WebsiteBuilderRoute
   '/analytics/executive': typeof AnalyticsExecutiveRoute
   '/channel-manager/analytics': typeof ChannelManagerAnalyticsRoute
   '/channel-manager/availability': typeof ChannelManagerAvailabilityRoute
   '/channel-manager/connections': typeof ChannelManagerConnectionsRoute
   '/channel-manager/images': typeof ChannelManagerImagesRoute
+  '/channel-manager/incidents': typeof ChannelManagerIncidentsRoute
   '/channel-manager/inventory': typeof ChannelManagerInventoryRoute
   '/channel-manager/multi-property': typeof ChannelManagerMultiPropertyRoute
   '/channel-manager/property-content': typeof ChannelManagerPropertyContentRoute
@@ -426,15 +530,19 @@ export interface FileRoutesByFullPath {
   '/dashboard/multi-property': typeof DashboardMultiPropertyRoute
   '/housekeeping/mobile': typeof HousekeepingMobileRoute
   '/reservations/new': typeof ReservationsNewRoute
+  '/revenue/ai-dashboard': typeof RevenueAiDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activities': typeof ActivitiesRoute
+  '/activity-timeline': typeof ActivityTimelineRoute
   '/add-ons': typeof AddOnsRoute
   '/ai-insights': typeof AiInsightsRoute
+  '/anomaly-monitor': typeof AnomalyMonitorRoute
   '/audit': typeof AuditRoute
   '/billing': typeof BillingRoute
   '/booking-engine': typeof BookingEngineRoute
+  '/booking-readiness': typeof BookingReadinessRoute
   '/channel-manager': typeof ChannelManagerRouteWithChildren
   '/check-in': typeof CheckInRoute
   '/communications': typeof CommunicationsRoute
@@ -445,33 +553,44 @@ export interface FileRoutesByTo {
   '/groups': typeof GroupsRoute
   '/guest-requests': typeof GuestRequestsRoute
   '/guests': typeof GuestsRoute
+  '/hotels': typeof HotelsRoute
   '/housekeeping': typeof HousekeepingRouteWithChildren
+  '/leads': typeof LeadsRoute
   '/login': typeof LoginRoute
   '/lost-found': typeof LostFoundRoute
   '/loyalty': typeof LoyaltyRoute
   '/maintenance': typeof MaintenanceRoute
+  '/masters': typeof MastersRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/ota': typeof OtaRoute
   '/packages': typeof PackagesRoute
   '/payments': typeof PaymentsRoute
+  '/pms-integrations': typeof PmsIntegrationsRoute
   '/pricing': typeof PricingRoute
   '/property': typeof PropertyRoute
   '/registration-cards': typeof RegistrationCardsRoute
   '/reports': typeof ReportsRoute
   '/reservations': typeof ReservationsRouteWithChildren
-  '/revenue': typeof RevenueRoute
+  '/revenue': typeof RevenueRouteWithChildren
+  '/revenue-drilldown': typeof RevenueDrilldownRoute
   '/roles': typeof RolesRoute
   '/rooms': typeof RoomsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
+  '/styleguide': typeof StyleguideRoute
   '/tasks': typeof TasksRoute
   '/transport': typeof TransportRoute
   '/users': typeof UsersRoute
+  '/website-builder': typeof WebsiteBuilderRoute
   '/analytics/executive': typeof AnalyticsExecutiveRoute
   '/channel-manager/analytics': typeof ChannelManagerAnalyticsRoute
   '/channel-manager/availability': typeof ChannelManagerAvailabilityRoute
   '/channel-manager/connections': typeof ChannelManagerConnectionsRoute
   '/channel-manager/images': typeof ChannelManagerImagesRoute
+  '/channel-manager/incidents': typeof ChannelManagerIncidentsRoute
   '/channel-manager/inventory': typeof ChannelManagerInventoryRoute
   '/channel-manager/multi-property': typeof ChannelManagerMultiPropertyRoute
   '/channel-manager/property-content': typeof ChannelManagerPropertyContentRoute
@@ -486,16 +605,20 @@ export interface FileRoutesByTo {
   '/dashboard/multi-property': typeof DashboardMultiPropertyRoute
   '/housekeeping/mobile': typeof HousekeepingMobileRoute
   '/reservations/new': typeof ReservationsNewRoute
+  '/revenue/ai-dashboard': typeof RevenueAiDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/activities': typeof ActivitiesRoute
+  '/activity-timeline': typeof ActivityTimelineRoute
   '/add-ons': typeof AddOnsRoute
   '/ai-insights': typeof AiInsightsRoute
+  '/anomaly-monitor': typeof AnomalyMonitorRoute
   '/audit': typeof AuditRoute
   '/billing': typeof BillingRoute
   '/booking-engine': typeof BookingEngineRoute
+  '/booking-readiness': typeof BookingReadinessRoute
   '/channel-manager': typeof ChannelManagerRouteWithChildren
   '/check-in': typeof CheckInRoute
   '/communications': typeof CommunicationsRoute
@@ -506,33 +629,44 @@ export interface FileRoutesById {
   '/groups': typeof GroupsRoute
   '/guest-requests': typeof GuestRequestsRoute
   '/guests': typeof GuestsRoute
+  '/hotels': typeof HotelsRoute
   '/housekeeping': typeof HousekeepingRouteWithChildren
+  '/leads': typeof LeadsRoute
   '/login': typeof LoginRoute
   '/lost-found': typeof LostFoundRoute
   '/loyalty': typeof LoyaltyRoute
   '/maintenance': typeof MaintenanceRoute
+  '/masters': typeof MastersRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/ota': typeof OtaRoute
   '/packages': typeof PackagesRoute
   '/payments': typeof PaymentsRoute
+  '/pms-integrations': typeof PmsIntegrationsRoute
   '/pricing': typeof PricingRoute
   '/property': typeof PropertyRoute
   '/registration-cards': typeof RegistrationCardsRoute
   '/reports': typeof ReportsRoute
   '/reservations': typeof ReservationsRouteWithChildren
-  '/revenue': typeof RevenueRoute
+  '/revenue': typeof RevenueRouteWithChildren
+  '/revenue-drilldown': typeof RevenueDrilldownRoute
   '/roles': typeof RolesRoute
   '/rooms': typeof RoomsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
+  '/styleguide': typeof StyleguideRoute
   '/tasks': typeof TasksRoute
   '/transport': typeof TransportRoute
   '/users': typeof UsersRoute
+  '/website-builder': typeof WebsiteBuilderRoute
   '/analytics/executive': typeof AnalyticsExecutiveRoute
   '/channel-manager/analytics': typeof ChannelManagerAnalyticsRoute
   '/channel-manager/availability': typeof ChannelManagerAvailabilityRoute
   '/channel-manager/connections': typeof ChannelManagerConnectionsRoute
   '/channel-manager/images': typeof ChannelManagerImagesRoute
+  '/channel-manager/incidents': typeof ChannelManagerIncidentsRoute
   '/channel-manager/inventory': typeof ChannelManagerInventoryRoute
   '/channel-manager/multi-property': typeof ChannelManagerMultiPropertyRoute
   '/channel-manager/property-content': typeof ChannelManagerPropertyContentRoute
@@ -547,17 +681,21 @@ export interface FileRoutesById {
   '/dashboard/multi-property': typeof DashboardMultiPropertyRoute
   '/housekeeping/mobile': typeof HousekeepingMobileRoute
   '/reservations/new': typeof ReservationsNewRoute
+  '/revenue/ai-dashboard': typeof RevenueAiDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/activities'
+    | '/activity-timeline'
     | '/add-ons'
     | '/ai-insights'
+    | '/anomaly-monitor'
     | '/audit'
     | '/billing'
     | '/booking-engine'
+    | '/booking-readiness'
     | '/channel-manager'
     | '/check-in'
     | '/communications'
@@ -568,33 +706,44 @@ export interface FileRouteTypes {
     | '/groups'
     | '/guest-requests'
     | '/guests'
+    | '/hotels'
     | '/housekeeping'
+    | '/leads'
     | '/login'
     | '/lost-found'
     | '/loyalty'
     | '/maintenance'
+    | '/masters'
+    | '/notifications'
     | '/onboarding'
     | '/ota'
     | '/packages'
     | '/payments'
+    | '/pms-integrations'
     | '/pricing'
     | '/property'
     | '/registration-cards'
     | '/reports'
     | '/reservations'
     | '/revenue'
+    | '/revenue-drilldown'
     | '/roles'
     | '/rooms'
+    | '/search'
+    | '/services'
     | '/settings'
     | '/staff'
+    | '/styleguide'
     | '/tasks'
     | '/transport'
     | '/users'
+    | '/website-builder'
     | '/analytics/executive'
     | '/channel-manager/analytics'
     | '/channel-manager/availability'
     | '/channel-manager/connections'
     | '/channel-manager/images'
+    | '/channel-manager/incidents'
     | '/channel-manager/inventory'
     | '/channel-manager/multi-property'
     | '/channel-manager/property-content'
@@ -609,15 +758,19 @@ export interface FileRouteTypes {
     | '/dashboard/multi-property'
     | '/housekeeping/mobile'
     | '/reservations/new'
+    | '/revenue/ai-dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/activities'
+    | '/activity-timeline'
     | '/add-ons'
     | '/ai-insights'
+    | '/anomaly-monitor'
     | '/audit'
     | '/billing'
     | '/booking-engine'
+    | '/booking-readiness'
     | '/channel-manager'
     | '/check-in'
     | '/communications'
@@ -628,33 +781,44 @@ export interface FileRouteTypes {
     | '/groups'
     | '/guest-requests'
     | '/guests'
+    | '/hotels'
     | '/housekeeping'
+    | '/leads'
     | '/login'
     | '/lost-found'
     | '/loyalty'
     | '/maintenance'
+    | '/masters'
+    | '/notifications'
     | '/onboarding'
     | '/ota'
     | '/packages'
     | '/payments'
+    | '/pms-integrations'
     | '/pricing'
     | '/property'
     | '/registration-cards'
     | '/reports'
     | '/reservations'
     | '/revenue'
+    | '/revenue-drilldown'
     | '/roles'
     | '/rooms'
+    | '/search'
+    | '/services'
     | '/settings'
     | '/staff'
+    | '/styleguide'
     | '/tasks'
     | '/transport'
     | '/users'
+    | '/website-builder'
     | '/analytics/executive'
     | '/channel-manager/analytics'
     | '/channel-manager/availability'
     | '/channel-manager/connections'
     | '/channel-manager/images'
+    | '/channel-manager/incidents'
     | '/channel-manager/inventory'
     | '/channel-manager/multi-property'
     | '/channel-manager/property-content'
@@ -669,15 +833,19 @@ export interface FileRouteTypes {
     | '/dashboard/multi-property'
     | '/housekeeping/mobile'
     | '/reservations/new'
+    | '/revenue/ai-dashboard'
   id:
     | '__root__'
     | '/'
     | '/activities'
+    | '/activity-timeline'
     | '/add-ons'
     | '/ai-insights'
+    | '/anomaly-monitor'
     | '/audit'
     | '/billing'
     | '/booking-engine'
+    | '/booking-readiness'
     | '/channel-manager'
     | '/check-in'
     | '/communications'
@@ -688,33 +856,44 @@ export interface FileRouteTypes {
     | '/groups'
     | '/guest-requests'
     | '/guests'
+    | '/hotels'
     | '/housekeeping'
+    | '/leads'
     | '/login'
     | '/lost-found'
     | '/loyalty'
     | '/maintenance'
+    | '/masters'
+    | '/notifications'
     | '/onboarding'
     | '/ota'
     | '/packages'
     | '/payments'
+    | '/pms-integrations'
     | '/pricing'
     | '/property'
     | '/registration-cards'
     | '/reports'
     | '/reservations'
     | '/revenue'
+    | '/revenue-drilldown'
     | '/roles'
     | '/rooms'
+    | '/search'
+    | '/services'
     | '/settings'
     | '/staff'
+    | '/styleguide'
     | '/tasks'
     | '/transport'
     | '/users'
+    | '/website-builder'
     | '/analytics/executive'
     | '/channel-manager/analytics'
     | '/channel-manager/availability'
     | '/channel-manager/connections'
     | '/channel-manager/images'
+    | '/channel-manager/incidents'
     | '/channel-manager/inventory'
     | '/channel-manager/multi-property'
     | '/channel-manager/property-content'
@@ -729,16 +908,20 @@ export interface FileRouteTypes {
     | '/dashboard/multi-property'
     | '/housekeeping/mobile'
     | '/reservations/new'
+    | '/revenue/ai-dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActivitiesRoute: typeof ActivitiesRoute
+  ActivityTimelineRoute: typeof ActivityTimelineRoute
   AddOnsRoute: typeof AddOnsRoute
   AiInsightsRoute: typeof AiInsightsRoute
+  AnomalyMonitorRoute: typeof AnomalyMonitorRoute
   AuditRoute: typeof AuditRoute
   BillingRoute: typeof BillingRoute
   BookingEngineRoute: typeof BookingEngineRoute
+  BookingReadinessRoute: typeof BookingReadinessRoute
   ChannelManagerRoute: typeof ChannelManagerRouteWithChildren
   CheckInRoute: typeof CheckInRoute
   CommunicationsRoute: typeof CommunicationsRoute
@@ -749,34 +932,51 @@ export interface RootRouteChildren {
   GroupsRoute: typeof GroupsRoute
   GuestRequestsRoute: typeof GuestRequestsRoute
   GuestsRoute: typeof GuestsRoute
+  HotelsRoute: typeof HotelsRoute
   HousekeepingRoute: typeof HousekeepingRouteWithChildren
+  LeadsRoute: typeof LeadsRoute
   LoginRoute: typeof LoginRoute
   LostFoundRoute: typeof LostFoundRoute
   LoyaltyRoute: typeof LoyaltyRoute
   MaintenanceRoute: typeof MaintenanceRoute
+  MastersRoute: typeof MastersRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   OtaRoute: typeof OtaRoute
   PackagesRoute: typeof PackagesRoute
   PaymentsRoute: typeof PaymentsRoute
+  PmsIntegrationsRoute: typeof PmsIntegrationsRoute
   PricingRoute: typeof PricingRoute
   PropertyRoute: typeof PropertyRoute
   RegistrationCardsRoute: typeof RegistrationCardsRoute
   ReportsRoute: typeof ReportsRoute
   ReservationsRoute: typeof ReservationsRouteWithChildren
-  RevenueRoute: typeof RevenueRoute
+  RevenueRoute: typeof RevenueRouteWithChildren
+  RevenueDrilldownRoute: typeof RevenueDrilldownRoute
   RolesRoute: typeof RolesRoute
   RoomsRoute: typeof RoomsRoute
+  SearchRoute: typeof SearchRoute
+  ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   StaffRoute: typeof StaffRoute
+  StyleguideRoute: typeof StyleguideRoute
   TasksRoute: typeof TasksRoute
   TransportRoute: typeof TransportRoute
   UsersRoute: typeof UsersRoute
+  WebsiteBuilderRoute: typeof WebsiteBuilderRoute
   AnalyticsExecutiveRoute: typeof AnalyticsExecutiveRoute
   DashboardMultiPropertyRoute: typeof DashboardMultiPropertyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/website-builder': {
+      id: '/website-builder'
+      path: '/website-builder'
+      fullPath: '/website-builder'
+      preLoaderRoute: typeof WebsiteBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/users': {
       id: '/users'
       path: '/users'
@@ -798,6 +998,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TasksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/styleguide': {
+      id: '/styleguide'
+      path: '/styleguide'
+      fullPath: '/styleguide'
+      preLoaderRoute: typeof StyleguideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/staff': {
       id: '/staff'
       path: '/staff'
@@ -812,6 +1019,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -824,6 +1045,13 @@ declare module '@tanstack/react-router' {
       path: '/roles'
       fullPath: '/roles'
       preLoaderRoute: typeof RolesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revenue-drilldown': {
+      id: '/revenue-drilldown'
+      path: '/revenue-drilldown'
+      fullPath: '/revenue-drilldown'
+      preLoaderRoute: typeof RevenueDrilldownRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/revenue': {
@@ -868,6 +1096,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pms-integrations': {
+      id: '/pms-integrations'
+      path: '/pms-integrations'
+      fullPath: '/pms-integrations'
+      preLoaderRoute: typeof PmsIntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payments': {
       id: '/payments'
       path: '/payments'
@@ -894,6 +1129,20 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/masters': {
+      id: '/masters'
+      path: '/masters'
+      fullPath: '/masters'
+      preLoaderRoute: typeof MastersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/maintenance': {
@@ -924,11 +1173,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leads': {
+      id: '/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/housekeeping': {
       id: '/housekeeping'
       path: '/housekeeping'
       fullPath: '/housekeeping'
       preLoaderRoute: typeof HousekeepingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hotels': {
+      id: '/hotels'
+      path: '/hotels'
+      fullPath: '/hotels'
+      preLoaderRoute: typeof HotelsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guests': {
@@ -1001,6 +1264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChannelManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking-readiness': {
+      id: '/booking-readiness'
+      path: '/booking-readiness'
+      fullPath: '/booking-readiness'
+      preLoaderRoute: typeof BookingReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/booking-engine': {
       id: '/booking-engine'
       path: '/booking-engine'
@@ -1022,6 +1292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anomaly-monitor': {
+      id: '/anomaly-monitor'
+      path: '/anomaly-monitor'
+      fullPath: '/anomaly-monitor'
+      preLoaderRoute: typeof AnomalyMonitorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai-insights': {
       id: '/ai-insights'
       path: '/ai-insights'
@@ -1034,6 +1311,13 @@ declare module '@tanstack/react-router' {
       path: '/add-ons'
       fullPath: '/add-ons'
       preLoaderRoute: typeof AddOnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activity-timeline': {
+      id: '/activity-timeline'
+      path: '/activity-timeline'
+      fullPath: '/activity-timeline'
+      preLoaderRoute: typeof ActivityTimelineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/activities': {
@@ -1049,6 +1333,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/revenue/ai-dashboard': {
+      id: '/revenue/ai-dashboard'
+      path: '/ai-dashboard'
+      fullPath: '/revenue/ai-dashboard'
+      preLoaderRoute: typeof RevenueAiDashboardRouteImport
+      parentRoute: typeof RevenueRoute
     }
     '/reservations/new': {
       id: '/reservations/new'
@@ -1148,6 +1439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChannelManagerInventoryRouteImport
       parentRoute: typeof ChannelManagerRoute
     }
+    '/channel-manager/incidents': {
+      id: '/channel-manager/incidents'
+      path: '/incidents'
+      fullPath: '/channel-manager/incidents'
+      preLoaderRoute: typeof ChannelManagerIncidentsRouteImport
+      parentRoute: typeof ChannelManagerRoute
+    }
     '/channel-manager/images': {
       id: '/channel-manager/images'
       path: '/images'
@@ -1191,6 +1489,7 @@ interface ChannelManagerRouteChildren {
   ChannelManagerAvailabilityRoute: typeof ChannelManagerAvailabilityRoute
   ChannelManagerConnectionsRoute: typeof ChannelManagerConnectionsRoute
   ChannelManagerImagesRoute: typeof ChannelManagerImagesRoute
+  ChannelManagerIncidentsRoute: typeof ChannelManagerIncidentsRoute
   ChannelManagerInventoryRoute: typeof ChannelManagerInventoryRoute
   ChannelManagerMultiPropertyRoute: typeof ChannelManagerMultiPropertyRoute
   ChannelManagerPropertyContentRoute: typeof ChannelManagerPropertyContentRoute
@@ -1209,6 +1508,7 @@ const ChannelManagerRouteChildren: ChannelManagerRouteChildren = {
   ChannelManagerAvailabilityRoute: ChannelManagerAvailabilityRoute,
   ChannelManagerConnectionsRoute: ChannelManagerConnectionsRoute,
   ChannelManagerImagesRoute: ChannelManagerImagesRoute,
+  ChannelManagerIncidentsRoute: ChannelManagerIncidentsRoute,
   ChannelManagerInventoryRoute: ChannelManagerInventoryRoute,
   ChannelManagerMultiPropertyRoute: ChannelManagerMultiPropertyRoute,
   ChannelManagerPropertyContentRoute: ChannelManagerPropertyContentRoute,
@@ -1250,14 +1550,28 @@ const ReservationsRouteWithChildren = ReservationsRoute._addFileChildren(
   ReservationsRouteChildren,
 )
 
+interface RevenueRouteChildren {
+  RevenueAiDashboardRoute: typeof RevenueAiDashboardRoute
+}
+
+const RevenueRouteChildren: RevenueRouteChildren = {
+  RevenueAiDashboardRoute: RevenueAiDashboardRoute,
+}
+
+const RevenueRouteWithChildren =
+  RevenueRoute._addFileChildren(RevenueRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ActivitiesRoute: ActivitiesRoute,
+  ActivityTimelineRoute: ActivityTimelineRoute,
   AddOnsRoute: AddOnsRoute,
   AiInsightsRoute: AiInsightsRoute,
+  AnomalyMonitorRoute: AnomalyMonitorRoute,
   AuditRoute: AuditRoute,
   BillingRoute: BillingRoute,
   BookingEngineRoute: BookingEngineRoute,
+  BookingReadinessRoute: BookingReadinessRoute,
   ChannelManagerRoute: ChannelManagerRouteWithChildren,
   CheckInRoute: CheckInRoute,
   CommunicationsRoute: CommunicationsRoute,
@@ -1268,28 +1582,38 @@ const rootRouteChildren: RootRouteChildren = {
   GroupsRoute: GroupsRoute,
   GuestRequestsRoute: GuestRequestsRoute,
   GuestsRoute: GuestsRoute,
+  HotelsRoute: HotelsRoute,
   HousekeepingRoute: HousekeepingRouteWithChildren,
+  LeadsRoute: LeadsRoute,
   LoginRoute: LoginRoute,
   LostFoundRoute: LostFoundRoute,
   LoyaltyRoute: LoyaltyRoute,
   MaintenanceRoute: MaintenanceRoute,
+  MastersRoute: MastersRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   OtaRoute: OtaRoute,
   PackagesRoute: PackagesRoute,
   PaymentsRoute: PaymentsRoute,
+  PmsIntegrationsRoute: PmsIntegrationsRoute,
   PricingRoute: PricingRoute,
   PropertyRoute: PropertyRoute,
   RegistrationCardsRoute: RegistrationCardsRoute,
   ReportsRoute: ReportsRoute,
   ReservationsRoute: ReservationsRouteWithChildren,
-  RevenueRoute: RevenueRoute,
+  RevenueRoute: RevenueRouteWithChildren,
+  RevenueDrilldownRoute: RevenueDrilldownRoute,
   RolesRoute: RolesRoute,
   RoomsRoute: RoomsRoute,
+  SearchRoute: SearchRoute,
+  ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   StaffRoute: StaffRoute,
+  StyleguideRoute: StyleguideRoute,
   TasksRoute: TasksRoute,
   TransportRoute: TransportRoute,
   UsersRoute: UsersRoute,
+  WebsiteBuilderRoute: WebsiteBuilderRoute,
   AnalyticsExecutiveRoute: AnalyticsExecutiveRoute,
   DashboardMultiPropertyRoute: DashboardMultiPropertyRoute,
 }

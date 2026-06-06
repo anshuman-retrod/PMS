@@ -1,13 +1,17 @@
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader, Button, KpiCard } from "@/components/ui/Primitives";
-import { guests } from "@/services/mock/db";
+import { useGuestsQuery } from "@/services/mock/queries";
 import { GuestsList } from "./GuestsList";
 import { GuestCrmPanel } from "./GuestCrmPanel";
 import { type Guest } from "@/types/pms";
 
 export function GuestsFeature() {
-  const [selectedGuest, setSelectedGuest] = useState<Guest>(guests[0]);
+  const { data: guests = [] } = useGuestsQuery();
+
+  const [selectedGuestName, setSelectedGuestName] = useState<string | null>(null);
+  const selectedGuest: Guest | null =
+    guests.find((g) => g.name === selectedGuestName) ?? guests[0] ?? null;
 
   const kpis = useMemo(() => {
     const repeat = guests.filter((g) => g.visits > 1).length;
@@ -31,17 +35,33 @@ export function GuestsFeature() {
           </Button>
         }
       />
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <KpiCard label="Total guests" value="3,142" delta="6 in workspace" deltaTone="neutral" accent="brand" />
+      <div className="responsive-page-x space-y-5 py-4 sm:space-y-6 sm:py-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiCard
+            label="Total guests"
+            value="3,142"
+            delta="6 in workspace"
+            deltaTone="neutral"
+            accent="brand"
+          />
           <KpiCard label="Repeat guests" value={String(kpis.repeat)} accent="success" />
           <KpiCard label="Loyalty members" value={String(kpis.loyalty)} accent="info" />
           <KpiCard label="Guest satisfaction" value={`NPS ${kpis.npsAvg}`} accent="success" />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
-          <GuestsList guests={guests} selectedName={selectedGuest.name} onSelectGuest={setSelectedGuest} />
-          {selectedGuest && <GuestCrmPanel guest={selectedGuest} />}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
+          <GuestsList
+            guests={guests}
+            selectedName={selectedGuest?.name}
+            onSelectGuest={(g) => setSelectedGuestName(g.name)}
+          />
+          {selectedGuest ? (
+            <GuestCrmPanel guest={selectedGuest} />
+          ) : (
+            <div className="rounded-lg border border-border bg-surface p-5 text-[13px] text-text-secondary">
+              No guest profiles available.
+            </div>
+          )}
         </div>
       </div>
     </div>

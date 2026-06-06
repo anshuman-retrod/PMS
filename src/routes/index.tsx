@@ -5,8 +5,8 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Dashboard — Retrod PMS" },
-      { name: "description", content: "Operational heartbeat for The Grand Palace, New Delhi." }
-    ]
+      { name: "description", content: "Operational heartbeat for The Grand Palace, New Delhi." },
+    ],
   }),
   component: DashboardFeature,
 });

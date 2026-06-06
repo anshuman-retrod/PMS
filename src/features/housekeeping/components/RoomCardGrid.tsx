@@ -28,7 +28,9 @@ export function RoomCardGrid({ housekeepingRooms, tone, cardBg }: RoomCardGridPr
             {f}
           </button>
         ))}
-        <span className="ml-3 text-[11px] text-text-disabled">Showing {selectedFloor} · 18 rooms</span>
+        <span className="ml-3 text-[11px] text-text-disabled">
+          Showing {selectedFloor} · 18 rooms
+        </span>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
@@ -36,7 +38,7 @@ export function RoomCardGrid({ housekeepingRooms, tone, cardBg }: RoomCardGridPr
           <div
             key={r.num}
             className={`rounded-md border border-l-[3px] border-border bg-surface p-3 shadow-e1 transition hover:scale-[1.03] ${cardBg(
-              r.status
+              r.status,
             )}`}
           >
             <div className="flex items-start justify-between">

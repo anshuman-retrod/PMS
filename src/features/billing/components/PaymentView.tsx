@@ -3,10 +3,13 @@ import { Card, CardHeader, Button } from "@/components/ui/Primitives";
 
 export function PaymentView() {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
       <Card>
-        <CardHeader title="Multi-tender payment" hint="Split across cash · card · UPI · city ledger" />
-        <div className="space-y-3 p-5">
+        <CardHeader
+          title="Multi-tender payment"
+          hint="Split across cash · card · UPI · city ledger"
+        />
+        <div className="space-y-3 p-4 sm:p-5">
           {[
             { icon: Banknote, name: "Cash", val: "₹2,000", ref: "Cashier · Sunil" },
             { icon: CreditCard, name: "Card · Visa **4421", val: "₹15,326", ref: "APRV-882910" },
@@ -14,14 +17,21 @@ export function PaymentView() {
           ].map((p, i) => {
             const Icon = p.icon;
             return (
-              <div key={i} className="flex items-center gap-3 rounded-md border border-border bg-surface px-4 py-3">
+              <div
+                key={i}
+                className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface px-3 py-3 sm:flex-nowrap sm:gap-3 sm:px-4"
+              >
                 <Icon className="h-4 w-4 text-primary" />
                 <div className="flex-1">
                   <div className="text-[13px] font-medium text-text-primary">{p.name}</div>
                   <div className="font-mono text-[11px] text-text-disabled">{p.ref}</div>
                 </div>
-                <span className="font-mono text-[14px] font-semibold text-text-primary">{p.val}</span>
-                <button className="text-[11px] text-[var(--color-error)] hover:underline">Remove</button>
+                <span className="font-mono text-[14px] font-semibold text-text-primary">
+                  {p.val}
+                </span>
+                <button className="text-[11px] text-[var(--color-error)] hover:underline">
+                  Remove
+                </button>
               </div>
             );
           })}
@@ -29,10 +39,12 @@ export function PaymentView() {
             + Add tender
           </Button>
         </div>
-        <div className="border-t border-border bg-surface-2/40 p-5 text-right">
+        <div className="border-t border-border bg-surface-2/40 p-4 text-right sm:p-5">
           <div className="text-[12px] text-text-secondary">
             Total tendered{" "}
-            <span className="ml-2 font-mono text-[18px] font-semibold text-text-primary">₹37,326</span>
+            <span className="ml-2 font-mono text-[18px] font-semibold text-text-primary">
+              ₹37,326
+            </span>
           </div>
           <Button className="mt-2" size="sm">
             Post payment
@@ -42,7 +54,7 @@ export function PaymentView() {
 
       <Card>
         <CardHeader title="Tender mix · MTD" />
-        <ul className="space-y-3 p-5 text-[12px]">
+        <ul className="space-y-3 p-4 text-[12px] sm:p-5">
           {[
             { n: "Card", pct: 58 },
             { n: "UPI", pct: 22 },

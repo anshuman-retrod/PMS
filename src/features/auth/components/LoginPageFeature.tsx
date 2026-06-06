@@ -17,7 +17,7 @@ import {
   Building2,
   Sparkles,
 } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { ROLE_LABEL } from "@/features/auth/lib/rbac";
 import { BloombergDashboard } from "./BloombergDashboard";
 
@@ -74,10 +74,10 @@ export function LoginPageFeature() {
 
     const trimmedUsername = username.trim().toLowerCase();
     const match = trimmedUsername
-      ? users.find((u) => u.email.toLowerCase().startsWith(trimmedUsername)) ??
+      ? (users.find((u) => u.email.toLowerCase().startsWith(trimmedUsername)) ??
         users.find((u) => u.email.toLowerCase().includes(trimmedUsername)) ??
         users.find((u) => u.name.toLowerCase().includes(trimmedUsername)) ??
-        users.find((u) => u.id === selected)
+        users.find((u) => u.id === selected))
       : users.find((u) => u.id === selected);
 
     setLoading(false);
@@ -139,9 +139,15 @@ export function LoginPageFeature() {
         </div>
 
         <div className="mx-auto flex w-full max-w-[360px] flex-1 flex-col justify-center px-5 py-12">
-          <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">Welcome back</div>
-          <h2 className="mt-2 font-display text-[30px] font-semibold leading-tight text-text-primary">Sign in to Retrod</h2>
-          <p className="mt-2 text-[13px] text-text-secondary">Use your assigned credentials to access the property.</p>
+          <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
+            Welcome back
+          </div>
+          <h2 className="mt-2 font-display text-[30px] font-semibold leading-tight text-text-primary">
+            Sign in to Retrod
+          </h2>
+          <p className="mt-2 text-[13px] text-text-secondary">
+            Use your assigned credentials to access the property.
+          </p>
 
           {/* Mode toggle */}
           <div className="mt-6 grid grid-cols-2 rounded-full border border-border bg-surface p-1 shadow-sm">
@@ -217,7 +223,9 @@ export function LoginPageFeature() {
                 </Field>
               )}
 
-              <PrimaryButton loading={loading}>{otpSent ? "Verify & sign in" : "Continue with OTP"}</PrimaryButton>
+              <PrimaryButton loading={loading}>
+                {otpSent ? "Verify & sign in" : "Continue with OTP"}
+              </PrimaryButton>
 
               <div className="flex items-center gap-3">
                 <div className="h-px flex-1 bg-border" />
@@ -283,7 +291,10 @@ export function LoginPageFeature() {
                   />
                   Remember me
                 </label>
-                <button type="button" className="text-[12.5px] font-medium text-primary hover:underline transition">
+                <button
+                  type="button"
+                  className="text-[12.5px] font-medium text-primary hover:underline transition"
+                >
                   Forgot password?
                 </button>
               </div>
@@ -295,7 +306,9 @@ export function LoginPageFeature() {
           {/* Demo access widget */}
           <div className="mt-6 rounded-xl border border-border bg-surface p-3.5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <div className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">Demo access</div>
+              <div className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">
+                Demo access
+              </div>
               <Sparkles className="h-3.5 w-3.5 text-primary/70" />
             </div>
             <div className="relative">

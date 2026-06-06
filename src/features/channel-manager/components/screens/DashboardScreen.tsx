@@ -42,10 +42,24 @@ export function DashboardScreen() {
       {error && <ErrorBlock message={error} onRetry={reload} />}
       {m && (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 xl:grid-cols-7">
-            <KpiCard label="Channels live" value={`${m.channelsLive}/${m.channelsTotal}`} accent="brand" />
-            <KpiCard label="Sync health" value={`${m.syncHealthPct}%`} delta={meta?.source === "mock" ? "Mock SU data" : "Live SU API"} accent="success" />
-            <KpiCard label="Bookings · MTD" value={String(m.bookingsMtd)} delta="↑ 24 vs LM" accent="info" />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+            <KpiCard
+              label="Channels live"
+              value={`${m.channelsLive}/${m.channelsTotal}`}
+              accent="brand"
+            />
+            <KpiCard
+              label="Sync health"
+              value={`${m.syncHealthPct}%`}
+              delta={meta?.source === "mock" ? "Mock SU data" : "Live SU API"}
+              accent="success"
+            />
+            <KpiCard
+              label="Bookings · MTD"
+              value={String(m.bookingsMtd)}
+              delta="↑ 24 vs LM"
+              accent="info"
+            />
             <KpiCard label="Channel revenue" value={fmtINR(m.revenueMtd)} accent="brand" />
             <KpiCard label="Pending syncs" value={String(m.pendingSyncs)} accent="warning" />
             <KpiCard label="Parity alerts" value={String(m.parityAlerts)} accent="error" />
@@ -55,7 +69,7 @@ export function DashboardScreen() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card>
               <CardHeader title="Quick actions" hint="Common channel manager workflows" />
-              <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   { label: "OTA Connections", to: "/channel-manager/connections", icon: Link2 },
                   { label: "Room mapping", to: "/channel-manager/room-mapping", icon: Link2 },
@@ -81,13 +95,18 @@ export function DashboardScreen() {
                   <p className="p-4 text-[13px] text-text-secondary">All channels aligned.</p>
                 ) : (
                   alerts.map((c) => (
-                    <div key={c.channel} className="flex items-center justify-between gap-3 px-4 py-3">
+                    <div
+                      key={c.channel}
+                      className="flex flex-wrap items-center justify-between gap-2 px-4 py-3"
+                    >
                       <div className="flex items-center gap-2">
                         <AlertTriangle className="h-4 w-4 text-[var(--color-warning)]" />
                         <div>
                           <p className="text-[13px] font-medium text-text-primary">{c.channel}</p>
                           <p className="text-[11px] text-text-secondary">
-                            {c.status !== "Connected" ? c.status : `Parity ${c.parityDelta ?? "drift"}`}
+                            {c.status !== "Connected"
+                              ? c.status
+                              : `Parity ${c.parityDelta ?? "drift"}`}
                           </p>
                         </div>
                       </div>
@@ -106,7 +125,10 @@ export function DashboardScreen() {
                 <thead>
                   <tr className="border-b border-border bg-surface-2/40 text-left">
                     {["Channel", "Type", "Action", "Status", "Records", "Time"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      <th
+                        key={h}
+                        className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                      >
                         {h}
                       </th>
                     ))}
@@ -114,7 +136,10 @@ export function DashboardScreen() {
                 </thead>
                 <tbody>
                   {recentLogs.map((log) => (
-                    <tr key={log.id} className="border-b border-border-subtle hover:bg-surface-2/30">
+                    <tr
+                      key={log.id}
+                      className="border-b border-border-subtle hover:bg-surface-2/30"
+                    >
                       <td className="px-4 py-2.5 font-medium">{log.channel}</td>
                       <td className="px-4 py-2.5 text-text-secondary">{log.type}</td>
                       <td className="px-4 py-2.5">{log.action}</td>

@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import {
   Outlet,
   Link,
@@ -11,8 +12,13 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import { AppShell } from "@/components/layout/AppShell";
-import { AuthProvider, useAuth } from "@/lib/auth";
+import { AppShell } from "@/app/layouts/AppShell";
+import { AuthProvider } from "@/features/auth/providers/AuthProvider";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { Toaster } from "@/components/ui/sonner";
+import { applyTheme, readSavedTheme } from "@/app/theme/theme";
+import FeatureDisabled from "@/components/FeatureDisabled";
+import type { FeatureKey } from "@/types/entitlements";
 
 function NotFoundComponent() {
   return (
@@ -46,7 +52,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-pressed"
           >
             Try again
@@ -63,7 +72,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Retrod PMS — Hospitality Operating System" },
-      { name: "description", content: "Enterprise-grade Property Management System for luxury hotels and hospitality groups." },
+      {
+        name: "description",
+        content:
+          "Enterprise-grade Property Management System for luxury hotels and hospitality groups.",
+      },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -76,14 +89,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }
 
 function AuthGate() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, featureEnabled } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   // Login page renders standalone (no shell)
@@ -91,6 +109,15 @@ function AuthGate() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
+  }
+
+  const disabledFeature = getFeatureBlockedOnPath(pathname, featureEnabled);
+  if (disabledFeature) {
+    return (
+      <AppShell>
+        <FeatureDisabled title={disabledFeature.title} description={disabledFeature.description} />
+      </AppShell>
+    );
   }
 
   return (
@@ -102,11 +129,72 @@ function AuthGate() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    applyTheme(readSavedTheme());
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <Toaster richColors />
         <AuthGate />
       </AuthProvider>
     </QueryClientProvider>
   );
+}
+
+function getFeatureBlockedOnPath(
+  pathname: string,
+  featureEnabled: (feature: FeatureKey) => boolean,
+): { title: string; description: string } | null {
+  const checks: Array<{
+    feature: FeatureKey;
+    matches: (path: string) => boolean;
+    title: string;
+    description: string;
+  }> = [
+    {
+      feature: "channelManager",
+      matches: (path) => path === "/channel-manager" || path.startsWith("/channel-manager/"),
+      title: "Channel Manager is not enabled",
+      description:
+        "This tenant setup does not include Channel Manager. Enable it in tenant features to use OTA connectivity screens.",
+    },
+    {
+      feature: "websiteBuilder",
+      matches: (path) => path === "/website-builder" || path.startsWith("/website-builder/"),
+      title: "Website Builder is not enabled",
+      description:
+        "This tenant setup does not include Website Builder. Enable it in tenant features to manage website pages.",
+    },
+    {
+      feature: "bookingEngine",
+      matches: (path) => path === "/booking-engine" || path.startsWith("/booking-engine/"),
+      title: "Booking Engine is not enabled",
+      description:
+        "This tenant setup does not include Booking Engine. Enable it in tenant features to manage direct booking experiences.",
+    },
+    {
+      feature: "revenueAi",
+      matches: (path) => path === "/revenue/ai-dashboard" || path === "/ai-insights",
+      title: "AI Revenue features are not enabled",
+      description:
+        "This tenant setup does not include AI Revenue features. Enable it in tenant features to access AI demand and pricing insights.",
+    },
+    {
+      feature: "masterData",
+      matches: (path) => path === "/masters" || path.startsWith("/masters/"),
+      title: "Master Data is not enabled",
+      description:
+        "This tenant setup does not include centralized Master Data Management. Enable it in tenant features to access this module.",
+    },
+  ];
+
+  for (const check of checks) {
+    if (check.matches(pathname) && !featureEnabled(check.feature)) {
+      return { title: check.title, description: check.description };
+    }
+  }
+  return null;
 }

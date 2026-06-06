@@ -1,7 +1,9 @@
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { activityFeed } from "@/services/mock/db";
+import { useActivityFeedQuery } from "@/services/mock/queries";
 
 export function ActivityFeed() {
+  const { data: activityFeed = [] } = useActivityFeedQuery();
+
   return (
     <Card>
       <CardHeader title="Activity" hint="Live feed" />

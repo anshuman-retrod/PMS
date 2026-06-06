@@ -1,12 +1,22 @@
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { revenueTrend } from "@/services/mock/db";
+import { useRevenueTrendQuery } from "@/services/mock/queries";
 
 interface RevenueOccupancyTrendProps {
   tooltipStyle: React.CSSProperties;
 }
 
 export function RevenueOccupancyTrend({ tooltipStyle }: RevenueOccupancyTrendProps) {
+  const { data: revenueTrend = [] } = useRevenueTrendQuery();
+
   return (
     <Card className="lg:col-span-2">
       <CardHeader
@@ -28,8 +38,18 @@ export function RevenueOccupancyTrend({ tooltipStyle }: RevenueOccupancyTrendPro
       <div className="px-3 pb-4 pt-2">
         <ResponsiveContainer width="100%" height={240}>
           <LineChart data={revenueTrend} margin={{ left: 8, right: 16, top: 8, bottom: 0 }}>
-            <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="day" stroke="var(--color-text-disabled)" fontSize={11} tickLine={false} axisLine={false} />
+            <CartesianGrid
+              stroke="var(--color-border-subtle)"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="day"
+              stroke="var(--color-text-disabled)"
+              fontSize={11}
+              tickLine={false}
+              axisLine={false}
+            />
             <YAxis
               yAxisId="r"
               stroke="var(--color-text-disabled)"
@@ -48,8 +68,23 @@ export function RevenueOccupancyTrend({ tooltipStyle }: RevenueOccupancyTrendPro
               tickFormatter={(v) => `${v}%`}
             />
             <Tooltip contentStyle={tooltipStyle} />
-            <Line yAxisId="r" type="monotone" dataKey="revenue" stroke="var(--color-primary)" strokeWidth={2} dot={false} />
-            <Line yAxisId="o" type="monotone" dataKey="occupancy" stroke="var(--color-info)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+            <Line
+              yAxisId="r"
+              type="monotone"
+              dataKey="revenue"
+              stroke="var(--color-primary)"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              yAxisId="o"
+              type="monotone"
+              dataKey="occupancy"
+              stroke="var(--color-info)"
+              strokeWidth={1.5}
+              strokeDasharray="4 4"
+              dot={false}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

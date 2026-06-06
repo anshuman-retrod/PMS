@@ -1,0 +1,465 @@
+import * as db from "@/services/mock/db";
+import type { FrontDeskWorkflowReservation, ReservationType } from "@/types/pms";
+
+const delay = (ms = 80) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const SUBMITTED_KEY = "retrod:new-reservation:last-submitted:v1";
+const OPS_TASKS_KEY = "retrod:ops-tasks:v1";
+const WB_WORKSPACE_KEY = "retrod:website-builder:workspace:v1";
+const WB_APPROVALS_KEY = "retrod:website-builder:approvals:v1";
+const WB_PUBLISH_KEY = "retrod:website-builder:publish-history:v1";
+
+export const dataKeys = {
+  reservations: ["data", "reservations"] as const,
+  arrivalsToday: ["data", "arrivalsToday"] as const,
+  departuresToday: ["data", "departuresToday"] as const,
+  housekeepingRooms: ["data", "housekeepingRooms"] as const,
+  revenueTrend: ["data", "revenueTrend"] as const,
+  otaBreakdown: ["data", "otaBreakdown"] as const,
+  roomStatusDonut: ["data", "roomStatusDonut"] as const,
+  activityFeed: ["data", "activityFeed"] as const,
+  occupancyByType: ["data", "occupancyByType"] as const,
+  revenueKpis: ["data", "revenueKpis"] as const,
+  dashboardAlerts: ["data", "dashboardAlerts"] as const,
+  forecast7d: ["data", "forecast7d"] as const,
+  availabilityMatrix: ["data", "availabilityMatrix"] as const,
+  rateCalendar: ["data", "rateCalendar"] as const,
+  restrictions: ["data", "restrictions"] as const,
+  guests: ["data", "guests"] as const,
+  waitlist: ["data", "waitlist"] as const,
+  groupBlocks: ["data", "groupBlocks"] as const,
+  workOrders: ["data", "workOrders"] as const,
+  opsTasks: ["data", "opsTasks"] as const,
+  guestServiceRequests: ["data", "guestServiceRequests"] as const,
+  otaMappings: ["data", "otaMappings"] as const,
+  otaSyncLogs: ["data", "otaSyncLogs"] as const,
+  pricingRules: ["data", "pricingRules"] as const,
+  corporateAccounts: ["data", "corporateAccounts"] as const,
+  onlineCheckIns: ["data", "onlineCheckIns"] as const,
+  commThreads: ["data", "commThreads"] as const,
+  loyaltyMembers: ["data", "loyaltyMembers"] as const,
+  registrationCards: ["data", "registrationCards"] as const,
+  lostFoundItems: ["data", "lostFoundItems"] as const,
+  feedbackEntries: ["data", "feedbackEntries"] as const,
+  bookingPromos: ["data", "bookingPromos"] as const,
+  packageProducts: ["data", "packageProducts"] as const,
+  addOnProducts: ["data", "addOnProducts"] as const,
+  conciergeRequests: ["data", "conciergeRequests"] as const,
+  transportTrips: ["data", "transportTrips"] as const,
+  activitySlots: ["data", "activitySlots"] as const,
+  portfolioProperties: ["data", "portfolioProperties"] as const,
+  aiRevenueDashboard: ["data", "aiRevenueDashboard"] as const,
+  mealPlans: ["data", "mealPlans"] as const,
+  ratePlans: ["data", "ratePlans"] as const,
+  ratePlanPolicies: ["data", "ratePlanPolicies"] as const,
+  hotelPackages: ["data", "hotelPackages"] as const,
+  packageItems: ["data", "packageItems"] as const,
+  occupancyPricingRules: ["data", "occupancyPricingRules"] as const,
+  frontDeskWorkflowReservations: ["data", "frontDeskWorkflowReservations"] as const,
+  frontDeskArrivalQueue: ["data", "frontDeskArrivalQueue"] as const,
+  frontDeskCheckoutQueue: ["data", "frontDeskCheckoutQueue"] as const,
+  websiteBuilderWorkspace: ["data", "websiteBuilderWorkspace"] as const,
+  websiteBuilderApprovals: ["data", "websiteBuilderApprovals"] as const,
+  websiteBuilderPublishHistory: ["data", "websiteBuilderPublishHistory"] as const,
+};
+
+export async function fetchReservations() {
+  await delay();
+  return db.reservations;
+}
+export async function fetchArrivalsToday() {
+  await delay();
+  return db.arrivalsToday;
+}
+export async function fetchDeparturesToday() {
+  await delay();
+  return db.departuresToday;
+}
+export async function fetchHousekeepingRooms() {
+  await delay();
+  return db.housekeepingRooms;
+}
+export async function fetchRevenueTrend() {
+  await delay();
+  return db.revenueTrend;
+}
+export async function fetchOtaBreakdown() {
+  await delay();
+  return db.otaBreakdown;
+}
+export async function fetchRoomStatusDonut() {
+  await delay();
+  return db.roomStatusDonut;
+}
+export async function fetchActivityFeed() {
+  await delay();
+  return db.activityFeed;
+}
+export async function fetchOccupancyByType() {
+  await delay();
+  return db.occupancyByType;
+}
+export async function fetchRevenueKpis() {
+  await delay();
+  return db.revenueKpis;
+}
+export async function fetchDashboardAlerts() {
+  await delay();
+  return db.dashboardAlerts;
+}
+export async function fetchForecast7d() {
+  await delay();
+  return db.forecast7d;
+}
+export async function fetchAvailabilityMatrix() {
+  await delay();
+  return db.availabilityMatrix;
+}
+export async function fetchRateCalendar() {
+  await delay();
+  return db.rateCalendar;
+}
+export async function fetchRestrictions() {
+  await delay();
+  return db.restrictions;
+}
+export async function fetchGuests() {
+  await delay();
+  return db.guests;
+}
+export async function fetchWaitlist() {
+  await delay();
+  return db.waitlist;
+}
+export async function fetchGroupBlocks() {
+  await delay();
+  return db.groupBlocks;
+}
+export async function fetchWorkOrders() {
+  await delay();
+  return db.workOrders;
+}
+export async function fetchOpsTasks() {
+  await delay();
+  const raw = typeof window !== "undefined" ? localStorage.getItem(OPS_TASKS_KEY) : null;
+  if (!raw) return db.opsTasks;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return db.opsTasks;
+    return parsed;
+  } catch {
+    return db.opsTasks;
+  }
+}
+export async function fetchGuestServiceRequests() {
+  await delay();
+  return db.guestServiceRequests;
+}
+export async function fetchOtaMappings() {
+  await delay();
+  return db.otaMappings;
+}
+export async function fetchOtaSyncLogs() {
+  await delay();
+  return db.otaSyncLogs;
+}
+export async function fetchPricingRules() {
+  await delay();
+  return db.pricingRules;
+}
+export async function fetchCorporateAccounts() {
+  await delay();
+  return db.corporateAccounts;
+}
+export async function fetchOnlineCheckIns() {
+  await delay();
+  return db.onlineCheckIns;
+}
+export async function fetchCommThreads() {
+  await delay();
+  return db.commThreads;
+}
+export async function fetchLoyaltyMembers() {
+  await delay();
+  return db.loyaltyMembers;
+}
+export async function fetchRegistrationCards() {
+  await delay();
+  return db.registrationCards;
+}
+export async function fetchLostFoundItems() {
+  await delay();
+  return db.lostFoundItems;
+}
+export async function fetchFeedbackEntries() {
+  await delay();
+  return db.feedbackEntries;
+}
+export async function fetchBookingPromos() {
+  await delay();
+  return db.bookingPromos;
+}
+export async function fetchPackageProducts() {
+  await delay();
+  return db.packageProducts;
+}
+export async function fetchAddOnProducts() {
+  await delay();
+  return db.addOnProducts;
+}
+export async function fetchConciergeRequests() {
+  await delay();
+  return db.conciergeRequests;
+}
+export async function fetchTransportTrips() {
+  await delay();
+  return db.transportTrips;
+}
+export async function fetchActivitySlots() {
+  await delay();
+  return db.activitySlots;
+}
+export async function fetchPortfolioProperties() {
+  await delay();
+  return db.portfolioProperties;
+}
+export async function fetchAIRevenueDashboard() {
+  await delay();
+  return db.aiRevenueDashboard;
+}
+export async function fetchMealPlans() {
+  await delay();
+  return db.mealPlans;
+}
+export async function fetchRatePlans() {
+  await delay();
+  return db.ratePlans;
+}
+export async function fetchRatePlanPolicies() {
+  await delay();
+  return db.ratePlanPolicies;
+}
+export async function fetchHotelPackages() {
+  await delay();
+  return db.hotelPackages;
+}
+export async function fetchPackageItems() {
+  await delay();
+  return db.packageItems;
+}
+export async function fetchOccupancyPricingRules() {
+  await delay();
+  return db.occupancyPricingRules;
+}
+export async function fetchFrontDeskWorkflowReservations() {
+  await delay();
+  const dynamic = typeof window !== "undefined" ? readSubmittedReservation() : null;
+  if (!dynamic) return db.frontDeskWorkflowReservations;
+  return [dynamic, ...db.frontDeskWorkflowReservations.filter((r) => r.id !== dynamic.id)];
+}
+export async function fetchFrontDeskArrivalQueue() {
+  await delay();
+  return (await fetchFrontDeskWorkflowReservations()).filter((r) =>
+    ["pre_arrival", "pending_id", "pending_payment", "room_assigned"].includes(r.frontDeskStatus),
+  );
+}
+export async function fetchFrontDeskCheckoutQueue() {
+  await delay();
+  return (await fetchFrontDeskWorkflowReservations()).filter((r) =>
+    ["checkout_due", "checkout_in_progress"].includes(r.frontDeskStatus),
+  );
+}
+
+export async function fetchWebsiteBuilderWorkspace() {
+  await delay();
+  const raw = typeof window !== "undefined" ? localStorage.getItem(WB_WORKSPACE_KEY) : null;
+  if (!raw) return db.websiteBuilderWorkspace;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed?.id || !Array.isArray(parsed?.pages)) return db.websiteBuilderWorkspace;
+    return parsed;
+  } catch {
+    return db.websiteBuilderWorkspace;
+  }
+}
+
+export async function saveWebsiteBuilderWorkspace(workspace: unknown) {
+  await delay(40);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(WB_WORKSPACE_KEY, JSON.stringify(workspace));
+  }
+  return workspace;
+}
+
+export async function saveOpsTasks(tasks: unknown) {
+  await delay(40);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(OPS_TASKS_KEY, JSON.stringify(tasks));
+  }
+  return tasks;
+}
+
+export async function fetchWebsiteBuilderApprovals() {
+  await delay();
+  const raw = typeof window !== "undefined" ? localStorage.getItem(WB_APPROVALS_KEY) : null;
+  if (!raw) return db.websiteBuilderApprovals;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return db.websiteBuilderApprovals;
+    return parsed;
+  } catch {
+    return db.websiteBuilderApprovals;
+  }
+}
+
+export async function saveWebsiteBuilderApprovals(approvals: unknown) {
+  await delay(40);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(WB_APPROVALS_KEY, JSON.stringify(approvals));
+  }
+  return approvals;
+}
+
+export async function fetchWebsiteBuilderPublishHistory() {
+  await delay();
+  const raw = typeof window !== "undefined" ? localStorage.getItem(WB_PUBLISH_KEY) : null;
+  if (!raw) return db.websiteBuilderPublishHistory;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return db.websiteBuilderPublishHistory;
+    return parsed;
+  } catch {
+    return db.websiteBuilderPublishHistory;
+  }
+}
+
+export async function saveWebsiteBuilderPublishHistory(history: unknown) {
+  await delay(40);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(WB_PUBLISH_KEY, JSON.stringify(history));
+  }
+  return history;
+}
+
+function readSubmittedReservation(): FrontDeskWorkflowReservation | null {
+  try {
+    const raw = localStorage.getItem(SUBMITTED_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as {
+      createdAt: string;
+      type: ReservationType;
+      form: {
+        fullName: string;
+        roomType: string;
+        checkIn: string;
+        checkOut: string;
+        nights?: number;
+        source: string;
+        adults: string;
+        notes?: string;
+        groupName?: string;
+        groupRooms?: string;
+        corporateCompany?: string;
+        corporatePoRef?: string;
+        packageName?: string;
+        walkinDeposit?: string;
+        walkinVehicleNo?: string;
+        eventType?: string;
+        eventVenue?: string;
+        eventOrganizer?: string;
+        eventContact?: string;
+      };
+    };
+    if (!parsed?.form?.fullName) return null;
+
+    const checkIn = parsed.form.checkIn || new Date().toISOString().slice(0, 10);
+    const checkOut = parsed.form.checkOut || checkIn;
+    const nights = Math.max(1, Number(parsed.form.nights ?? 1));
+    const amountSeed: Record<ReservationType, number> = {
+      individual: 12000,
+      group: 180000,
+      corporate: 24000,
+      package: 28000,
+      walkin: 9500,
+      event: 96000,
+    };
+    const amount = amountSeed[parsed.type] * nights;
+    const reservationId = `RES-${new Date(parsed.createdAt).getTime().toString().slice(-4)}`;
+    const room = parsed.type === "event" ? "BANQ-1" : "TBD";
+
+    const base: FrontDeskWorkflowReservation = {
+      id: reservationId,
+      guest: parsed.form.fullName,
+      room,
+      type: parsed.form.roomType || "Deluxe King",
+      ci: checkIn,
+      co: checkOut,
+      nights,
+      amount,
+      status: "Confirmed",
+      source: parsed.form.source || "Direct",
+      balance: 0,
+      reservationType: parsed.type,
+      frontDeskStatus: "pre_arrival",
+      billingMode: parsed.type === "corporate" ? "direct_bill" : parsed.type === "group" ? "split" : "guest_pay",
+      folioState: "open",
+      checkinChecklist: [
+        { key: "find_guest", label: "Find guest", done: true, required: true },
+        { key: "verify_id", label: "Verify ID", done: false, required: true },
+        { key: "assign_room", label: "Assign room", done: false, required: true },
+        { key: "collect_payment", label: "Collect payment", done: false, required: true },
+        { key: "issue_key", label: "Issue key", done: false, required: true },
+      ],
+      checkoutChecklist: [
+        { key: "review_folio", label: "Review folio", done: false, required: true },
+        { key: "return_key", label: "Return key", done: false, required: true },
+        { key: "send_invoice", label: "Send invoice", done: false, required: true },
+        { key: "handover_hk", label: "Handover to HK", done: false, required: true },
+      ],
+      blockerCodes: ["missing_id"],
+    };
+
+    if (parsed.type === "group") {
+      base.groupMeta = {
+        blockName: parsed.form.groupName || "New Group Block",
+        blockedRooms: Number(parsed.form.groupRooms || 0),
+        pickedUpRooms: 0,
+        roomingListReady: false,
+        settlementMode: "master",
+      };
+    }
+    if (parsed.type === "corporate") {
+      base.corporateMeta = {
+        company: parsed.form.corporateCompany || "Corporate Account",
+        poRef: parsed.form.corporatePoRef || "",
+      };
+      if (!parsed.form.corporatePoRef) base.blockerCodes.push("pending_po");
+    }
+    if (parsed.type === "package") {
+      base.packageMeta = {
+        packageName: parsed.form.packageName || "Selected Package",
+        inclusions: ["Welcome amenity", "Inclusions as booked"],
+        benefitsPosted: false,
+      };
+    }
+    if (parsed.type === "walkin") {
+      const deposit = Number(parsed.form.walkinDeposit || 0);
+      base.walkinMeta = {
+        idVerified: false,
+        depositAmount: Number.isFinite(deposit) ? deposit : 0,
+        vehicleNo: parsed.form.walkinVehicleNo || "",
+      };
+    }
+    if (parsed.type === "event") {
+      base.eventMeta = {
+        eventName: parsed.form.eventType || "Event booking",
+        venue: parsed.form.eventVenue || "Banquet",
+        organizer: parsed.form.eventOrganizer || parsed.form.fullName,
+        contact: parsed.form.eventContact || "",
+        billingSplit: "venue_catering_av",
+      };
+    }
+    return base;
+  } catch {
+    return null;
+  }
+}

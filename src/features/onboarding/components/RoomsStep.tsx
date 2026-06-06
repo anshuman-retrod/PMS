@@ -1,6 +1,6 @@
 import { Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Primitives";
-import { type OnboardingState, type RoomType } from "@/lib/onboarding-store";
+import { type OnboardingState, type RoomTypeConfig } from "@/lib/onboarding-store";
 
 interface RoomsStepProps {
   state: OnboardingState;
@@ -12,14 +12,22 @@ const inputCls =
   "h-9 w-full rounded-md border border-border bg-surface px-3 text-[13px] text-text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15 disabled:opacity-60";
 
 export function RoomsStep({ state, setState, disabled }: RoomsStepProps) {
-  const set = (rt: RoomType[]) => setState((s) => ({ ...s, roomTypes: rt }));
-  const update = (id: string, patch: Partial<RoomType>) =>
+  const set = (rt: RoomTypeConfig[]) => setState((s) => ({ ...s, roomTypes: rt }));
+  const update = (id: string, patch: Partial<RoomTypeConfig>) =>
     set(state.roomTypes.map((r) => (r.id === id ? { ...r, ...patch } : r)));
   const remove = (id: string) => set(state.roomTypes.filter((r) => r.id !== id));
   const add = () =>
     set([
       ...state.roomTypes,
-      { id: `rt${Date.now()}`, name: "New Room Type", count: 10, baseRate: 5000, amenities: "" },
+      {
+        id: `rt${Date.now()}`,
+        name: "New Room Type",
+        count: 10,
+        capacity: 2,
+        baseRate: 5000,
+        amenities: "",
+        description: "",
+      },
     ]);
   const total = state.roomTypes.reduce((s, r) => s + r.count, 0);
 
@@ -38,8 +46,11 @@ export function RoomsStep({ state, setState, disabled }: RoomsStepProps) {
         <table className="w-full text-[13px]">
           <thead className="bg-surface-2/40">
             <tr className="border-b border-border-subtle bg-surface-2/40 text-left">
-              {["Name", "Count", "Base rate", "Amenities", ""].map((h) => (
-                <th key={h} className="px-3 py-2 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+              {["Name", "Count", "Capacity", "Base rate", "Amenities", "Description", ""].map((h) => (
+                <th
+                  key={h}
+                  className="px-3 py-2 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                >
                   {h}
                 </th>
               ))}
@@ -65,6 +76,15 @@ export function RoomsStep({ state, setState, disabled }: RoomsStepProps) {
                     onChange={(e) => update(r.id, { count: Number(e.target.value) })}
                   />
                 </td>
+                <td className="px-3 py-2 w-24">
+                  <input
+                    disabled={disabled}
+                    type="number"
+                    className={inputCls}
+                    value={r.capacity}
+                    onChange={(e) => update(r.id, { capacity: Number(e.target.value) })}
+                  />
+                </td>
                 <td className="px-3 py-2 w-32">
                   <input
                     disabled={disabled}
@@ -80,6 +100,14 @@ export function RoomsStep({ state, setState, disabled }: RoomsStepProps) {
                     className={inputCls}
                     value={r.amenities}
                     onChange={(e) => update(r.id, { amenities: e.target.value })}
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <input
+                    disabled={disabled}
+                    className={inputCls}
+                    value={r.description}
+                    onChange={(e) => update(r.id, { description: e.target.value })}
                   />
                 </td>
                 <td className="px-3 py-2 w-10">

@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Download, FileSpreadsheet, FileText, Printer } from "lucide-react";
 import { PageHeader, KpiCard, Button } from "@/components/ui/Primitives";
-import { revenueTrend, otaBreakdown } from "@/services/mock/db";
+import {
+  useRevenueTrendQuery,
+  useOtaBreakdownQuery,
+  useMealPlansQuery,
+  useRatePlansQuery,
+  useHotelPackagesQuery,
+  useAddOnProductsQuery,
+} from "@/services/mock/queries";
 import { ReportsSidebar } from "./ReportsSidebar";
 import { RevenueTrendChart } from "./RevenueTrendChart";
 import { OtaRevenueChart } from "./OtaRevenueChart";
@@ -26,6 +33,13 @@ const tooltipStyle = {
 };
 
 export function ReportsFeature() {
+  const { data: revenueTrend = [] } = useRevenueTrendQuery();
+  const { data: otaBreakdown = [] } = useOtaBreakdownQuery();
+  const { data: mealPlans = [] } = useMealPlansQuery();
+  const { data: ratePlans = [] } = useRatePlansQuery();
+  const { data: hotelPackages = [] } = useHotelPackagesQuery();
+  const { data: addOnProducts = [] } = useAddOnProductsQuery();
+
   const [selectedCategory, setSelectedCategory] = useState<string>("Revenue");
 
   return (
@@ -55,7 +69,7 @@ export function ReportsFeature() {
         }
       />
 
-      <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-[220px_1fr]">
+      <div className="responsive-page-x grid grid-cols-1 gap-5 py-4 sm:py-6 lg:grid-cols-[220px_1fr]">
         {/* Left categories navigation sidebar */}
         <ReportsSidebar
           categories={categories}
@@ -63,8 +77,8 @@ export function ReportsFeature() {
           onSelectCategory={setSelectedCategory}
         />
 
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <div className="space-y-5 sm:space-y-6">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <KpiCard label="Total Revenue" value="₹1.42 Cr" delta="↑ 12.4% YoY" accent="brand" />
             <KpiCard label="Occupancy" value="78.4%" delta="↑ 2.1 pts" accent="info" />
             <KpiCard label="ADR" value="₹11,820" delta="↑ ₹420" accent="success" />
@@ -80,6 +94,37 @@ export function ReportsFeature() {
 
             {/* Room occupancy ratios */}
             <OccupancyProgress />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="rounded-lg border border-border bg-surface p-4 shadow-e1">
+              <div className="label-uppercase mb-2">Plan Revenue Snapshot</div>
+              <div className="space-y-2 text-[12px]">
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Reservations by meal plan</span>
+                  <span className="font-mono text-text-primary">{mealPlans.length} configured</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Revenue by rate plan</span>
+                  <span className="font-mono text-text-primary">{ratePlans.length} configured</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Package revenue tracking</span>
+                  <span className="font-mono text-text-primary">{hotelPackages.length} templates</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Add-on revenue tracking</span>
+                  <span className="font-mono text-text-primary">{addOnProducts.length} services</span>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border bg-surface p-4 shadow-e1">
+              <div className="label-uppercase mb-2">Channel Mapping Readiness</div>
+              <p className="text-[12px] text-text-secondary">
+                Room type + meal plan + rate plan combinations are now represented in reservation
+                model and can be mapped to OTA products in Channel Manager mapping flows.
+              </p>
+            </div>
           </div>
         </div>
       </div>

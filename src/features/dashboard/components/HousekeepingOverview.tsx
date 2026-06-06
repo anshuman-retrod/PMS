@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Card, CardHeader } from "@/components/ui/Primitives";
-import { roomStatusDonut } from "@/services/mock/db";
+import { useRoomStatusDonutQuery } from "@/services/mock/queries";
 
 export function HousekeepingOverview() {
+  const { data: roomStatusDonut = [] } = useRoomStatusDonutQuery();
+
   return (
     <Card>
       <CardHeader

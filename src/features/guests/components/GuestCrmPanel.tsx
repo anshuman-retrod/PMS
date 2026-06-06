@@ -29,7 +29,9 @@ export function GuestCrmPanel({ guest }: { guest: Guest }) {
               type="button"
               onClick={() => setTab(t.id)}
               className={`rounded px-3 py-1.5 text-[12px] font-medium transition ${
-                tab === t.id ? "bg-foreground text-background" : "text-text-secondary hover:text-text-primary"
+                tab === t.id
+                  ? "bg-foreground text-background"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               {t.label}
@@ -38,7 +40,7 @@ export function GuestCrmPanel({ guest }: { guest: Guest }) {
         </div>
       </div>
 
-      <div className="space-y-4 p-5">
+      <div className="space-y-4 p-4 sm:p-5">
         {tab === "profile" && (
           <>
             <div className="flex items-center gap-3">
@@ -46,12 +48,16 @@ export function GuestCrmPanel({ guest }: { guest: Guest }) {
                 {avatarInitials}
               </div>
               <div>
-                <div className="font-display text-[18px] font-semibold text-text-primary">{guest.name}</div>
+                <div className="font-display text-[18px] font-semibold text-text-primary">
+                  {guest.name}
+                </div>
                 <div className="text-[12px] text-text-secondary">{guest.country}</div>
-                {guest.email && <div className="text-[12px] text-text-secondary">{guest.email}</div>}
+                {guest.email && (
+                  <div className="text-[12px] text-text-secondary">{guest.email}</div>
+                )}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 text-[12px]">
+            <div className="grid grid-cols-1 gap-3 text-[12px] sm:grid-cols-2">
               <Stat label="Lifetime spend" value={`₹${guest.ltv.toLocaleString()}`} />
               <Stat label="NPS" value={guest.nps != null ? String(guest.nps) : "—"} />
               <Stat label="Visits" value={String(guest.visits)} />
@@ -97,7 +103,9 @@ export function GuestCrmPanel({ guest }: { guest: Guest }) {
                   <div className="text-text-secondary">
                     {s.ci} → {s.co}
                   </div>
-                  <div className="mt-1 font-mono text-text-primary">₹{s.amount.toLocaleString()}</div>
+                  <div className="mt-1 font-mono text-text-primary">
+                    ₹{s.amount.toLocaleString()}
+                  </div>
                 </div>
               ))
             )}
@@ -110,7 +118,10 @@ export function GuestCrmPanel({ guest }: { guest: Guest }) {
               <p className="text-[13px] text-text-secondary">No notes yet.</p>
             ) : (
               guest.notes!.map((n, i) => (
-                <div key={i} className="rounded-md border border-border-subtle bg-surface-2/40 p-3 text-[12px]">
+                <div
+                  key={i}
+                  className="rounded-md border border-border-subtle bg-surface-2/40 p-3 text-[12px]"
+                >
                   <div className="text-[10px] text-text-secondary">
                     {n.at} · {n.author}
                   </div>

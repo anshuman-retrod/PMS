@@ -2,13 +2,49 @@ import { Plus } from "lucide-react";
 import { PageHeader, Card, CardHeader, StatusBadge, Button } from "@/components/ui/Primitives";
 
 const staff = [
-  { name: "Aarav Malhotra", role: "General Manager", dept: "Leadership", shift: "—", status: "Active" },
-  { name: "Neha Kapoor", role: "Front Desk Lead", dept: "Front Office", shift: "Morning", status: "On duty" },
-  { name: "Priya Reddy", role: "Housekeeping Supervisor", dept: "Housekeeping", shift: "Morning", status: "On duty" },
-  { name: "Lakshmi Iyer", role: "Housekeeper", dept: "Housekeeping", shift: "Morning", status: "On duty" },
+  {
+    name: "Aarav Malhotra",
+    role: "General Manager",
+    dept: "Leadership",
+    shift: "—",
+    status: "Active",
+  },
+  {
+    name: "Neha Kapoor",
+    role: "Front Desk Lead",
+    dept: "Front Office",
+    shift: "Morning",
+    status: "On duty",
+  },
+  {
+    name: "Priya Reddy",
+    role: "Housekeeping Supervisor",
+    dept: "Housekeeping",
+    shift: "Morning",
+    status: "On duty",
+  },
+  {
+    name: "Lakshmi Iyer",
+    role: "Housekeeper",
+    dept: "Housekeeping",
+    shift: "Morning",
+    status: "On duty",
+  },
   { name: "Sunil Rao", role: "Concierge", dept: "Front Office", shift: "Evening", status: "Off" },
-  { name: "Anjali Bose", role: "Housekeeper", dept: "Housekeeping", shift: "Evening", status: "Off" },
-  { name: "Rahul Singh", role: "Maintenance Lead", dept: "Engineering", shift: "On-call", status: "Active" },
+  {
+    name: "Anjali Bose",
+    role: "Housekeeper",
+    dept: "Housekeeping",
+    shift: "Evening",
+    status: "Off",
+  },
+  {
+    name: "Rahul Singh",
+    role: "Maintenance Lead",
+    dept: "Engineering",
+    shift: "On-call",
+    status: "Active",
+  },
 ];
 
 export function StaffFeature() {
@@ -32,7 +68,10 @@ export function StaffFeature() {
             <thead>
               <tr className="border-b border-border bg-surface-2/40 text-left">
                 {["Name", "Role", "Department", "Shift", "Status", ""].map((h) => (
-                  <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  <th
+                    key={h}
+                    className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                  >
                     {h}
                   </th>
                 ))}
@@ -57,12 +96,22 @@ export function StaffFeature() {
                   <td className="px-4 py-3 text-text-secondary">{s.dept}</td>
                   <td className="px-4 py-3 text-text-secondary">{s.shift}</td>
                   <td className="px-4 py-3">
-                    <StatusBadge tone={s.status === "On duty" ? "success" : s.status === "Active" ? "info" : "neutral"}>
+                    <StatusBadge
+                      tone={
+                        s.status === "On duty"
+                          ? "success"
+                          : s.status === "Active"
+                            ? "info"
+                            : "neutral"
+                      }
+                    >
                       {s.status}
                     </StatusBadge>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <a className="text-[12px] font-medium text-primary hover:underline cursor-pointer">Permissions</a>
+                    <a className="text-[12px] font-medium text-primary hover:underline cursor-pointer">
+                      Permissions
+                    </a>
                   </td>
                 </tr>
               ))}

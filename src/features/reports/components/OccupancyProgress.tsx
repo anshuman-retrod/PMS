@@ -18,7 +18,10 @@ export function OccupancyProgress() {
               <span className="font-mono text-text-primary">{r.v}%</span>
             </div>
             <div className="h-1.5 w-full rounded-full bg-surface-2">
-              <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${r.v}%` }} />
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-500"
+                style={{ width: `${r.v}%` }}
+              />
             </div>
           </div>
         ))}

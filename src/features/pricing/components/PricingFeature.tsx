@@ -1,10 +1,21 @@
 import { useState } from "react";
 import { Plus, Filter } from "lucide-react";
-import { PageHeader, KpiCard, Button, Card, CardHeader, StatusBadge } from "@/components/ui/Primitives";
-import { pricingRules } from "@/services/mock/db";
+import {
+  PageHeader,
+  KpiCard,
+  Button,
+  Card,
+  CardHeader,
+  StatusBadge,
+} from "@/components/ui/Primitives";
+import { usePricingRulesQuery, useMealPlansQuery, useRatePlansQuery } from "@/services/mock/queries";
 import { AIPricingRecs } from "@/features/revenue/components/AIPricingRecs";
 
 export function PricingFeature() {
+  const { data: pricingRules = [] } = usePricingRulesQuery();
+  const { data: mealPlans = [] } = useMealPlansQuery();
+  const { data: ratePlans = [] } = useRatePlansQuery();
+
   const [statusFilter, setStatusFilter] = useState("All");
   const active = pricingRules.filter((r) => r.status === "Active").length;
   const filtered =
@@ -57,7 +68,10 @@ export function PricingFeature() {
               <thead>
                 <tr className="border-b border-border bg-surface-2/40 text-left">
                   {["Rule", "Trigger", "Adjustment", "Status", "Last run", ""].map((h) => (
-                    <th key={h} className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    <th
+                      key={h}
+                      className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-text-secondary"
+                    >
                       {h}
                     </th>
                   ))}
@@ -73,11 +87,16 @@ export function PricingFeature() {
                     <td className="px-4 py-3 text-text-secondary">{r.trigger}</td>
                     <td className="px-4 py-3 font-mono text-text-primary">{r.adjustment}</td>
                     <td className="px-4 py-3">
-                      <StatusBadge tone={r.status === "Active" ? "success" : "neutral"}>{r.status}</StatusBadge>
+                      <StatusBadge tone={r.status === "Active" ? "success" : "neutral"}>
+                        {r.status}
+                      </StatusBadge>
                     </td>
                     <td className="px-4 py-3 text-text-secondary">{r.lastRun}</td>
                     <td className="px-4 py-3 text-right">
-                      <button type="button" className="text-[12px] font-medium text-primary hover:underline">
+                      <button
+                        type="button"
+                        className="text-[12px] font-medium text-primary hover:underline"
+                      >
                         Edit
                       </button>
                     </td>
@@ -88,10 +107,63 @@ export function PricingFeature() {
           </Card>
 
           <div className="space-y-4">
+            <Card>
+              <CardHeader
+                title="Meal plan management"
+                hint={`${mealPlans.filter((m) => m.status === "Active").length} active plans`}
+              />
+              <div className="space-y-2 p-4">
+                {mealPlans.map((meal) => (
+                  <div
+                    key={meal.id}
+                    className="flex items-start justify-between rounded-md border border-border-subtle bg-surface-2/30 px-3 py-2"
+                  >
+                    <div>
+                      <div className="text-[12px] font-semibold text-text-primary">
+                        {meal.code} · {meal.name}
+                      </div>
+                      <div className="text-[11px] text-text-secondary">
+                        {meal.includedMeals.length > 0 ? meal.includedMeals.join(", ") : "Room only"}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-mono text-[11px] text-primary">
+                        +₹{meal.priceAdjustment.toLocaleString()}
+                      </div>
+                      <StatusBadge tone={meal.status === "Active" ? "success" : "neutral"}>
+                        {meal.status}
+                      </StatusBadge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+            <Card>
+              <CardHeader title="Rate plan management" hint={`${ratePlans.length} configured plans`} />
+              <div className="space-y-2 p-4">
+                {ratePlans.map((plan) => (
+                  <div
+                    key={plan.id}
+                    className="rounded-md border border-border-subtle bg-surface-2/30 px-3 py-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-[12px] font-semibold text-text-primary">{plan.name}</div>
+                      <div className="font-mono text-[11px] text-success">
+                        {plan.discountPercent > 0 ? `-${plan.discountPercent}%` : "0%"}
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-text-secondary">{plan.description}</div>
+                  </div>
+                ))}
+              </div>
+            </Card>
             <Card className="border border-primary/20 bg-primary-tint/30 p-4">
-              <div className="text-[10px] font-medium uppercase tracking-[0.08em] text-primary-pressed">Simulation</div>
+              <div className="text-[10px] font-medium uppercase tracking-[0.08em] text-primary-pressed">
+                Simulation
+              </div>
               <p className="mt-2 text-[13px] text-text-primary">
-                Applying active rules this weekend projects <strong>+₹1.8L</strong> revenue at 91% forecast occupancy.
+                Applying active rules this weekend projects <strong>+₹1.8L</strong> revenue at 91%
+                forecast occupancy.
               </p>
               <Button size="sm" className="mt-3">
                 Run simulation

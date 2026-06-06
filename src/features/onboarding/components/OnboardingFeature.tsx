@@ -1,15 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  Building2, BedDouble, Receipt, Users as UsersIcon, Plug, ScrollText, CheckCircle2,
-  ArrowLeft, ArrowRight, Check,
+  Building2,
+  BedDouble,
+  Receipt,
+  Users as UsersIcon,
+  Plug,
+  ScrollText,
+  CheckCircle2,
+  ArrowLeft,
+  ArrowRight,
+  Check,
 } from "lucide-react";
 import { PageHeader, Card, CardHeader, Button, StatusBadge } from "@/components/ui/Primitives";
 import {
-  DEFAULT_ONBOARDING, loadOnboarding, saveOnboarding, type OnboardingState,
+  DEFAULT_ONBOARDING,
+  computeOnboardingProgress,
+  loadOnboarding,
+  saveOnboarding,
+  withDerivedOnboarding,
+  type OnboardingStepKey,
+  type OnboardingState,
 } from "@/lib/onboarding-store";
 import { type Role } from "@/types/rbac";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import type { FeatureFlags } from "@/types/entitlements";
 
 import { ProfileStep } from "./ProfileStep";
 import { RoomsStep } from "./RoomsStep";
@@ -19,19 +34,26 @@ import { IntegrationsStep } from "./IntegrationsStep";
 import { PoliciesStep } from "./PoliciesStep";
 import { ReviewStep } from "./ReviewStep";
 
-const STEPS = [
-  { key: "profile", label: "Property Profile", icon: Building2, desc: "Identity, address, tax ID" },
-  { key: "rooms", label: "Room Types & Inventory", icon: BedDouble, desc: "Categories & inventory" },
-  { key: "rates", label: "Rates & Taxes", icon: Receipt, desc: "Plans, GST, service charge" },
-  { key: "staff", label: "Staff & Invites", icon: UsersIcon, desc: "Roles, invitations" },
-  { key: "integrations", label: "Integrations", icon: Plug, desc: "Payments, channels, comms" },
-  { key: "policies", label: "Policies", icon: ScrollText, desc: "Check-in, cancellation" },
-  { key: "review", label: "Review & Finish", icon: CheckCircle2, desc: "Confirm and go live" },
+const STEPS: Array<{ key: OnboardingStepKey; label: string; icon: typeof Building2; desc: string }> = [
+  { key: "dashboard", label: "Onboarding Dashboard", icon: Building2, desc: "Progress and next action" },
+  { key: "property", label: "Property Information", icon: Building2, desc: "Identity and contacts" },
+  {
+    key: "rooms",
+    label: "Room Types & Inventory",
+    icon: BedDouble,
+    desc: "Categories & inventory",
+  },
+  { key: "meal-plans", label: "Meal Plans, Rates & Tax", icon: Receipt, desc: "Meal plans, rates and taxes" },
+  { key: "packages", label: "Packages", icon: Receipt, desc: "Hospitality package setup" },
+  { key: "users", label: "User Setup", icon: UsersIcon, desc: "Roles and invitations" },
+  { key: "payments", label: "Payments & Channels", icon: Plug, desc: "Payment + OTA + website + CRM" },
+  { key: "reservation-settings", label: "Policies", icon: ScrollText, desc: "Reservation and cancellation policies" },
+  { key: "go-live", label: "Go Live Validation", icon: CheckCircle2, desc: "Validation and launch" },
 ] as const;
 
 export function OnboardingFeature() {
   const nav = useNavigate();
-  const { can, inviteUser } = useAuth();
+  const { can, inviteUser, setTenantFeature, setPropertyFeatures } = useAuth();
   const [state, setState] = useState<OnboardingState>(DEFAULT_ONBOARDING);
   const [hydrated, setHydrated] = useState(false);
 
@@ -42,7 +64,7 @@ export function OnboardingFeature() {
 
   useEffect(() => {
     if (hydrated) {
-      saveOnboarding(state);
+      saveOnboarding(withDerivedOnboarding(state));
     }
   }, [state, hydrated]);
 
@@ -51,17 +73,21 @@ export function OnboardingFeature() {
     setState((s) => ({ ...s, step: Math.max(0, Math.min(STEPS.length - 1, n)) }));
 
   const canRun = can("onboarding.run");
+  const progress = computeOnboardingProgress(withDerivedOnboarding(state));
 
   const finish = () => {
-    state.staff.forEach((s) => {
+    state.users.forEach((s) => {
       inviteUser({
         name: s.name,
         email: s.email,
         role: s.role as Role,
-        property: state.profile.name || "The Grand Palace",
+        property: state.profile.propertyName || "The Grand Palace",
       });
     });
-    setState((s) => ({ ...s, completed: true }));
+    const finalState = withDerivedOnboarding({ ...state, completed: true });
+    setState(finalState);
+    saveOnboarding(finalState);
+    applyOnboardingEntitlements(finalState, setTenantFeature, setPropertyFeatures);
     nav({ to: "/" });
   };
 
@@ -142,16 +168,138 @@ export function OnboardingFeature() {
           <Card>
             <CardHeader title={STEPS[step].label} hint={STEPS[step].desc} />
             <div className="p-6">
-              {step === 0 && <ProfileStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 1 && <RoomsStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 2 && <RatesStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 3 && <StaffStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 4 && <IntegrationsStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 5 && <PoliciesStep state={state} setState={setState} disabled={!canRun} />}
-              {step === 6 && <ReviewStep state={state} />}
+              {step === 0 && (
+                <div className="space-y-4">
+                  <div className="rounded-md border border-border bg-surface-2/30 p-4">
+                    <div className="label-uppercase mb-2">Property Setup Progress</div>
+                    <div className="text-[28px] font-display text-text-primary">{progress.percentage}%</div>
+                    <div className="text-[12px] text-text-secondary">
+                      {progress.completed} / {progress.total} onboarding stages completed
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                    {STEPS.slice(1).map((stepItem) => {
+                      const done = state.progress[stepItem.key];
+                      return (
+                        <button
+                          key={stepItem.key}
+                          type="button"
+                          onClick={() => setStep(STEPS.findIndex((entry) => entry.key === stepItem.key))}
+                          className="flex items-center justify-between rounded-md border border-border-subtle bg-surface px-3 py-2 text-left hover:bg-surface-2"
+                        >
+                          <span className="text-[12px] text-text-primary">{stepItem.label}</span>
+                          <span
+                            className={`rounded px-2 py-1 text-[10px] uppercase ${
+                              done
+                                ? "bg-primary-tint text-primary-pressed"
+                                : "bg-warning-tint text-warning"
+                            }`}
+                          >
+                            {done ? "Done" : "Pending"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="rounded-md border border-border bg-surface p-4 text-[12px] text-text-secondary">
+                    Recommended next step:{" "}
+                    <strong className="text-text-primary">
+                      {STEPS.find((entry) => entry.key === progress.nextStep)?.label ?? "Go Live"}
+                    </strong>
+                  </div>
+                </div>
+              )}
+              {step === 1 && <ProfileStep state={state} setState={setState} disabled={!canRun} />}
+              {step === 2 && <RoomsStep state={state} setState={setState} disabled={!canRun} />}
+              {step === 3 && <RatesStep state={state} setState={setState} disabled={!canRun} />}
+              {step === 4 && (
+                <div className="space-y-4">
+                  <div className="label-uppercase">Package Configuration</div>
+                  <div className="space-y-2">
+                    {state.packages.map((pkg) => (
+                      <div
+                        key={pkg.id}
+                        className="grid grid-cols-1 gap-2 rounded-md border border-border-subtle bg-surface-2/30 px-3 py-2 md:grid-cols-[1fr_150px_1fr_auto]"
+                      >
+                        <input
+                          disabled={!canRun}
+                          className="h-9 rounded-md border border-border bg-surface px-3 text-[13px]"
+                          value={pkg.name}
+                          onChange={(e) =>
+                            setState((prev) => ({
+                              ...prev,
+                              packages: prev.packages.map((item) =>
+                                item.id === pkg.id ? { ...item, name: e.target.value } : item,
+                              ),
+                            }))
+                          }
+                        />
+                        <input
+                          disabled={!canRun}
+                          type="number"
+                          className="h-9 rounded-md border border-border bg-surface px-3 text-[13px]"
+                          value={pkg.basePrice}
+                          onChange={(e) =>
+                            setState((prev) => ({
+                              ...prev,
+                              packages: prev.packages.map((item) =>
+                                item.id === pkg.id
+                                  ? { ...item, basePrice: Number(e.target.value) }
+                                  : item,
+                              ),
+                            }))
+                          }
+                        />
+                        <input
+                          disabled={!canRun}
+                          className="h-9 rounded-md border border-border bg-surface px-3 text-[13px]"
+                          value={pkg.includes}
+                          onChange={(e) =>
+                            setState((prev) => ({
+                              ...prev,
+                              packages: prev.packages.map((item) =>
+                                item.id === pkg.id ? { ...item, includes: e.target.value } : item,
+                              ),
+                            }))
+                          }
+                        />
+                        <label className="flex items-center gap-2 text-[12px]">
+                          <input
+                            disabled={!canRun}
+                            type="checkbox"
+                            checked={pkg.active}
+                            onChange={(e) =>
+                              setState((prev) => ({
+                                ...prev,
+                                packages: prev.packages.map((item) =>
+                                  item.id === pkg.id
+                                    ? { ...item, active: e.target.checked }
+                                    : item,
+                                ),
+                              }))
+                            }
+                          />
+                          Active
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {step === 5 && <StaffStep state={state} setState={setState} disabled={!canRun} />}
+              {step === 6 && (
+                <IntegrationsStep state={state} setState={setState} disabled={!canRun} />
+              )}
+              {step === 7 && <PoliciesStep state={state} setState={setState} disabled={!canRun} />}
+              {step === 8 && <ReviewStep state={state} />}
             </div>
             <div className="flex items-center justify-between border-t border-border-subtle px-6 py-4">
-              <Button variant="outline" size="sm" onClick={() => setStep(step - 1)} disabled={step === 0}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setStep(step - 1)}
+                disabled={step === 0}
+              >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Back
               </Button>
@@ -174,3 +322,24 @@ export function OnboardingFeature() {
   );
 }
 export default OnboardingFeature;
+
+function applyOnboardingEntitlements(
+  state: OnboardingState,
+  setTenantFeature: (feature: keyof FeatureFlags, enabled: boolean) => void,
+  setPropertyFeatures: (property: string, features: Partial<FeatureFlags>) => void,
+) {
+  const connectedChannels = state.channelManager.channels.some((channel) => channel.connected);
+  const propertyName = state.profile.propertyName.trim() || "The Grand Palace";
+  const features: FeatureFlags = {
+    channelManager: connectedChannels,
+    websiteBuilder: state.websiteBuilder.pagesConfigured || state.websiteBuilder.roomsConfigured,
+    bookingEngine: state.bookingEngine.enabled,
+    revenueAi: connectedChannels || state.ratePlans.some((plan) => plan.active),
+    masterData: true,
+  };
+
+  (Object.entries(features) as Array<[keyof FeatureFlags, boolean]>).forEach(([feature, enabled]) => {
+    setTenantFeature(feature, enabled);
+  });
+  setPropertyFeatures(propertyName, features);
+}

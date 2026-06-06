@@ -25,7 +25,10 @@ export function SplitView({ folio }: SplitViewProps) {
             {folio
               .filter((f) => f.cat !== "Room")
               .map((f) => (
-                <li key={f.id} className="flex items-center justify-between px-4 py-2.5 text-[13px]">
+                <li
+                  key={f.id}
+                  className="flex items-center justify-between px-4 py-2.5 text-[13px]"
+                >
                   <span className="text-text-primary">{f.desc}</span>
                   <span className="font-mono text-text-secondary">₹{f.amt.toLocaleString()}</span>
                 </li>
@@ -41,7 +44,10 @@ export function SplitView({ folio }: SplitViewProps) {
             {folio
               .filter((f) => f.cat === "Room")
               .map((f) => (
-                <li key={f.id} className="flex items-center justify-between px-4 py-2.5 text-[13px]">
+                <li
+                  key={f.id}
+                  className="flex items-center justify-between px-4 py-2.5 text-[13px]"
+                >
                   <span className="text-text-primary">{f.desc}</span>
                   <span className="font-mono text-text-primary">₹{f.amt.toLocaleString()}</span>
                 </li>
